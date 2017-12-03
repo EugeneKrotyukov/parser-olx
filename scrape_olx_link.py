@@ -7,7 +7,7 @@ import time
 # logging.basicConfig(level = logging.DEBUG)
 
 
-url = 'https://www.olx.ua/odessa/q-zamberlan/?search%5Bfilter_float_price%3Afrom%5D=1000&search%5Bfilter_float_price%3Ato%5D=10000' #main page
+# url = 'https://www.olx.ua/odessa/q-zamberlan/' #main page
 
 
 def get_response(url):
@@ -74,7 +74,7 @@ def get_max_page(html):
 
 
 
-def main():
+def start(url):
     path_file = 'product.txt' # file for result
     count_page = 1 # start page
     response = get_response(url)
@@ -93,8 +93,4 @@ def main():
         count_page += 1
 
     logging.info('OK!')
-
-
-if __name__ == '__main__':
-    main()
 
