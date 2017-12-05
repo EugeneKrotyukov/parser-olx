@@ -23,14 +23,14 @@ def parse_details(html):
     b_soup = BeautifulSoup(html, 'html.parser')
     soup = b_soup.find('div', attrs={'class': 'offer-titlebox'})
     title = soup.find('h1').text.strip() # название
-    show_map = soup.find('strong').text.strip() # город
+    place = soup.find('strong').text.strip() # город
     time_date = soup.find('em').text.strip()[52:72] # дата, время размещения
     time, date = time_date.split(',')
-    number = soup.find('small').text[18:] # номер объявления
+    ad_number = soup.find('small').text[18:] # номер объявления
     price = b_soup.find('div', attrs={'class': 'price-label'}).text.strip() # цена
     content = b_soup.find('div', attrs={'id': 'textContent'}).text.strip() # описание
-    link_img = b_soup.find('div', attrs={'id': 'offerdescription'})
-    return title, show_map, date, time, number, price, content
+    # link_img = b_soup.find('div', attrs={'id': 'offerdescription'})
+    return ad_number, title, price, date, place, content
 
 
 def scrab_number(phone_response):
