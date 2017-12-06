@@ -41,13 +41,14 @@ def write_to_bd(name_bd, list_products):
         cookie = get_details.get_cookie(response)
         ad_number, title, price, date, place, content = get_details.parse_details(str_response)
         #time.sleep(2)
-        try:
-            phone_response = get_details.get_response_phone(id_post, cookie, token)
-            phone = get_details.scrab_number(phone_response)
-            # logging.debug('Parse phone - ' + "[" + phone + "]")
-            bd_olx.insert_bd(name_bd, ad_number, title, price, date, place, phone, content)
-        except:
-            logging.warning("Product don't have number phone - " + "[" + link + "]")
+        bd_olx.insert_bd(name_bd, ad_number, title, price, date, place, content)
+        # try:
+        #    phone_response = get_details.get_response_phone(id_post, cookie, token)
+        #    phone = get_details.scrab_number(phone_response)
+        #    # logging.debug('Parse phone - ' + "[" + phone + "]")
+        #    bd_olx.insert_bd(name_bd, ad_number, title, price, date, place, phone, content)
+        # except:
+        #    logging.warning("Product don't have number phone - " + "[" + link + "]")
 
 
 def get_max_page(html):
