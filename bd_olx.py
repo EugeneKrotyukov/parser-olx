@@ -15,21 +15,24 @@ def create_bd(bd_name):
         content)''')
 
 
-def insert_bd(bd_name, ad_number):
+def insert_bd(bd_name, ad_number, title, price, date, place, content):
     conn = sqlite3.connect(bd_name)
     with conn:
         cursor = conn.cursor()
-        cursor.executemany('''INSERT INTO olx_parsing (ad_number)
-                            VALUES (?)''', ad_number)
+        cursor.execute('''INSERT INTO olx_parsing (ad_number, title, price, date, place, content)
+                         VALUES (?, ?, ?, ?, ?, ?)''', (ad_number, title, price, date, place, content))
 
+
+'''
 bd_name = 'test.sqlite'
-ad_number = '9999'
-title = 'Заголовок'
-price = '555''
-date = '12 декабря'
-place = 'Одесса'
-content = 'описание описание описание'
+ad_number = '1234567890987654321'
+title = 'Супер заголовок'
+price = '2345'
+date = '12 декабря 2017'
+place = 'Одесса МАлиновский р-н'
+content = 'здесь должно находится описание товара'
 
 create_bd(bd_name)
 
-insert_bd(bd_name, ad_number)
+insert_bd(bd_name, ad_number, title, price, date, place, content)
+'''

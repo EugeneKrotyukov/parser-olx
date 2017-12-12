@@ -5,7 +5,7 @@ import re
 import urllib.request
 import logging
 import time
-# logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
 # url = 'https://www.olx.ua/odessa/q-zamberlan/' #main page
@@ -41,14 +41,13 @@ def write_to_bd(name_bd, list_products):
         cookie = get_details.get_cookie(response)
         ad_number, title, price, date, place, content = get_details.parse_details(str_response)
         #time.sleep(2)
-        bd_olx.insert_bd(name_bd, ad_number, title, price, date, place, content)
-        # try:
-        #    phone_response = get_details.get_response_phone(id_post, cookie, token)
-        #    phone = get_details.scrab_number(phone_response)
-        #    # logging.debug('Parse phone - ' + "[" + phone + "]")
-        #    bd_olx.insert_bd(name_bd, ad_number, title, price, date, place, phone, content)
-        # except:
-        #    logging.warning("Product don't have number phone - " + "[" + link + "]")
+        try:
+            phone_response = get_details.get_response_phone(id_post, cookie, token)
+            phone = get_details.scrab_number(phone_response)
+            # logging.debug('Parse phone - ' + "[" + phone + "]")
+            bd_olx.insert_bd(name_bd, ad_number, title, price, date, place, content)
+        except:
+            logging.warning("Product don't have number phone - " + "[" + link + "]")
 
 
 def get_max_page(html):
@@ -67,12 +66,12 @@ def start(url):
     while max_page >= count_page:
         url_page = url + '?page=' + str(count_page)
         # print('url_page', url_page)
-        logging.info('PAGE - [' + str(count_page) + ']')
+        # logging.info('PAGE - [' + str(count_page) + ']')
         html = get_response(url_page)
         list_product = scrab_product(str(html.read().decode("utf-8")))
-        logging.debug('Scrape list of products on page')
+        # logging.debug('Scrape list of products on page')
         write_to_bd(name_bd, list_product)
         count_page += 1
 
-    logging.info('OK!')
+    # logging.info('OK!')
 
