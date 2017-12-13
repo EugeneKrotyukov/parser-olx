@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
 import get_details
-import bd_olx
+import bd_sqlite
 import re
 import urllib.request
-import logging
-import time
-logging.basicConfig(level=logging.DEBUG)
 
 
 # url = 'https://www.olx.ua/odessa/q-zamberlan/' #main page
