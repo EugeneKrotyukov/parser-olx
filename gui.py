@@ -12,15 +12,15 @@ def get_url_entry(event):
     url_lable = Label(root, text=url, font='12')
     url_lable.grid(row=1, column=1)
     url_entry.delete(0, END)
-    scrape_olx_main.start(url)
+    main.start(url)
 
 
 def get_url_button():
     url = url_entry.get()
     url_lable = Label(root, text=url, font='12')
     url_lable.grid(row=1, column=1)
-    query_entry.delete(0, END)
-    scrape_olx_main.start(url)
+    url_entry.delete(0, END)
+    main.start(url)
 
 
 root = Tk()

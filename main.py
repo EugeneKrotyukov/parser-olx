@@ -2,6 +2,7 @@ import get_details
 import bd_sqlite
 import re
 import urllib.request
+from bs4 import BeautifulSoup
 
 
 # url = 'https://www.olx.ua/odessa/q-zamberlan/' #main page
@@ -46,28 +47,32 @@ def write_to_bd(name_bd, list_products):
             logging.warning("Product don't have number phone - " + "[" + link + "]")
 
 
+# def get_max_page(html):
+#    """get the last page """
+#    max_page = re.search(r'(?<="page_count":").*?(?=")', html)
+#    return str(max_page.group(0))
+
 def get_max_page(html):
     """get the last page """
     max_page = re.search(r'(?<="page_count":").*?(?=")', html)
     return str(max_page.group(0))
 
 
+
 def start(url):
     name_bd = 'olx_sqlite'
     count_page = 1 # start page
     response = get_response(url)
-    max_page = int(get_max_page(str(response.read().decode("utf-8"))))
-    bd_olx.create_bd(name_bd)
+    # max_page = int(get_max_page(str(response.read().decode("utf-8"))))
+    max_page = int(get_max_page(str(response.read())))
+    print(max_page)
+'''
+    bd_sqlite.create_bd(name_bd)
 
     while max_page >= count_page:
         url_page = url + '?page=' + str(count_page)
-        # print('url_page', url_page)
-        # logging.info('PAGE - [' + str(count_page) + ']')
         html = get_response(url_page)
         list_product = scrab_product(str(html.read().decode("utf-8")))
-        # logging.debug('Scrape list of products on page')
         write_to_bd(name_bd, list_product)
         count_page += 1
-
-    # logging.info('OK!')
-
+'''
