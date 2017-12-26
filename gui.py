@@ -9,7 +9,6 @@ import main
 
 def get_url_entry(event):
     """enter click"""
-    global h, w, padx, pady, start_x, start_y
     url = url_entry.get()
     number_page = number_page_entry.get()
     url_lbl = Label(root, text=url, font='12', bg='grey')
