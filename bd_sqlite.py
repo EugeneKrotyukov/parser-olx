@@ -2,6 +2,7 @@ import sqlite3
 
 
 def create_bd(bd_name):
+    """create table"""
     conn = sqlite3.connect(bd_name)
     with conn:
         cursor = conn.cursor()
@@ -18,6 +19,7 @@ def create_bd(bd_name):
 
 
 def insert_bd(bd_name, number, title, price, date, time, phone, place, content):
+    """insert in table"""
     conn = sqlite3.connect(bd_name)
     with conn:
         cursor = conn.cursor()

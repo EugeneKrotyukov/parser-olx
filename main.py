@@ -1,12 +1,8 @@
-import get_details
 import bd_sqlite
 import re
 import urllib.request
 import urllib.error
 from bs4 import BeautifulSoup
-
-
-# url = 'https://www.olx.ua/odessa/q-zamberlan/' #main page
 
 
 def get_response(url):
@@ -39,12 +35,14 @@ def get_cookie(response):
 
 
 def token_and_id(html):
+    """get token_phone and id_product"""
     token = re.search(r"(?<=phoneToken\ =\ ')[\w\W]*?(?=';)", html)
     id_product = re.search(r'(?<=ID)[\w\W]*?(?=\.html)', html)
     return str(token.group(0)), str(id_product.group(0))
 
 
 def get_phone(id_product, token, cookie):
+    """get phone"""
     url = 'https://www.olx.ua/ajax/misc/contact/phone/' + id_product +'/?pt=' + token
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/53.0.2785.143 Chrome/53.0.2785.143 Safari/537.36'
     r = urllib.request.Request(url, headers={'user-agent': user_agent, 'Cookie': cookie})
@@ -79,13 +77,13 @@ def parse_details(html):
     return number, title, price, date, time, place, content
 
 
-def start(url):
+def start(url, number_page):
     bd_sqlite.create_bd(name_bd)
     count_page = 1 # start page
     response = get_response(url)
-    max_page = int(get_max_page(str(response.read().decode("utf-8"))))
+    # max_page = int(get_max_page(str(response.read().decode("utf-8"))))
 
-    while max_page >= count_page:
+    while int(number_page) >= count_page:
         url_page = url + '?page=' + str(count_page)
         response_page = get_response(url_page)
         list_product = scrab_product(str(response_page.read().decode("utf-8")))
