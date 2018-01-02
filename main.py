@@ -77,7 +77,7 @@ def parse_details(html):
     return number, title, price, date, time, place, content
 
 
-def start(url, number_page):
+def scrape(url, number_page):
     bd_sqlite.create_bd(name_bd)
     count_page = 1 # start page
     response = get_response(url)
