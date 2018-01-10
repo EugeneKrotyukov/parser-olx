@@ -19,7 +19,7 @@ def get_max_page(html):
     return str(max_page.group(0))
 
 
-def get_link_of_product(html):
+def get_link_for_product(html):
     """get list of products on page"""
     link_products = []
     soup = BeautifulSoup(html, 'html.parser')
@@ -89,7 +89,7 @@ def scrape(list_product):
         token, id_product = token_and_id(html)
         number, title, price, date, time, place, content = parse_details(html)
         phone = get_phone(id_product, token, cookie)
-        bd_sqlite.insert_bd(name_bd, number, title, price, date, time, phone, place, content)
+        bd_sqlite.insert_bd('olx_sqlite', number, title, price, date, time, phone, place, content)
 
 
 def get_list_product(url, number_page):
@@ -101,8 +101,8 @@ def get_list_product(url, number_page):
     while int(number_page) >= count_page:
         url_page = url + '?page=' + str(count_page)
         response_page = get_response(url_page)
-        link = get_link_of_product(str(response_page.read().decode("utf-8")))
-        list_product.append(link)
+        link = get_link_for_product(str(response_page.read().decode("utf-8")))
+        list_product.extend(link)
         # parse_product(list_product)
         count_page += 1
 
