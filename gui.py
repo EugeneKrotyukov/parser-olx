@@ -18,7 +18,7 @@ def get_url_entry(event):
     url_lbl = Label(root, text=url, font='12', bg='grey')
     url_lbl.place(height=h, relwidth=0.8, relx=0.5, y=3*h+start_y+4*pady, anchor='c')
     url_entry.delete(0, END)
-    main.scrape(url, number_page)
+    main.get_list_product(url, number_page)
 
 
 def get_url_button():
@@ -28,7 +28,7 @@ def get_url_button():
     url_lbl = Label(root, text=url, font='12', bg='grey')
     url_lbl.place(height=h, relwidth=0.8, relx=0.5, y=3*h+start_y+4*pady, anchor='c')
     url_entry.delete(0, END)
-    main.scrape(url, number_page)
+    main.get_list_product(url, number_page)
 
 
 def progress():

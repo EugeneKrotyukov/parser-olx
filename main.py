@@ -19,14 +19,14 @@ def get_max_page(html):
     return str(max_page.group(0))
 
 
-def scrab_product(html):
+def get_link_of_product(html):
     """get list of products on page"""
-    products = []
+    link_products = []
     soup = BeautifulSoup(html, 'html.parser')
     for result in soup.findAll('table', attrs={'summary': 'Объявление'}):
         product = result.find('a').get('href')
-        products.append(product)
-    return products
+        link_products.append(product)
+    return link_products
 
 
 def get_cookie(response):
@@ -77,28 +77,38 @@ def parse_details(html):
     return number, title, price, date, time, place, content
 
 
-def scrape(url, number_page):
-    bd_sqlite.create_bd(name_bd)
+def scrape(list_product):
+    bd_sqlite.create_bd('olx_sqlite')
+    pb_max = len(list_product)
+    print(pb_max)
+    for pb_current, link in enumerate(list_product, 1):
+        print(pb_current)
+        r = get_response(link)
+        cookie = get_cookie(r)
+        html = str(r.read().decode("utf-8"))
+        token, id_product = token_and_id(html)
+        number, title, price, date, time, place, content = parse_details(html)
+        phone = get_phone(id_product, token, cookie)
+        bd_sqlite.insert_bd(name_bd, number, title, price, date, time, phone, place, content)
+
+
+def get_list_product(url, number_page):
+    list_product = []
     count_page = 1 # start page
-    response = get_response(url)
+    # response = get_response(url)
     # max_page = int(get_max_page(str(response.read().decode("utf-8"))))
 
     while int(number_page) >= count_page:
         url_page = url + '?page=' + str(count_page)
         response_page = get_response(url_page)
-        list_product = scrab_product(str(response_page.read().decode("utf-8")))
+        link = get_link_of_product(str(response_page.read().decode("utf-8")))
+        list_product.append(link)
         # parse_product(list_product)
-
-        for link in list_product:
-            r = get_response(link)
-            cookie = get_cookie(r)
-            html = str(r.read().decode("utf-8"))
-            token, id_product = token_and_id(html)
-            number, title, price, date, time, place, content = parse_details(html)
-            phone = get_phone(id_product, token, cookie)
-            bd_sqlite.insert_bd(name_bd, number, title, price, date, time, phone, place, content)
-
         count_page += 1
 
+    scrape(list_product)
 
-name_bd = 'olx_sqlite'
+
+
+
+
