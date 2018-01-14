@@ -77,21 +77,17 @@ def parse_details(html):
     return number, title, price, date, time, place, content
 
 def set_pb( a_pb, a_root):
-    global pb
-    global root
+    """set """
+    global pb, root
     pb = a_pb
     root = a_root
 
 def scrape(list_product):
     """scrape data and write to base"""
     bd_sqlite.create_bd('olx_sqlite')
-    pb_max = len(list_product)
-#    print(pb_max)
-    pb['maximum'] = pb_max
-    for pb_current, link in enumerate(list_product, 1):
-#        print(pb_current)
+    pb['maximum'] = len(list_product)
+    for link in list_product:
 
-        #progress(pb_max, pb_current)
         pb.step()
         root.update()
 
@@ -122,6 +118,28 @@ def get_list_product(url, number_page):
     scrape(list_product)
 
 
+def select_prices():
+    """get list of prices"""
+    prices = bd_sqlite.select_from_bd('olx_sqlite')
+    list_prices = []
+    for element in prices:
+        digit = re.search(r'[0-9| ]+', element[0])  # finds all the digits
+        digit = str(digit.group(0))
+        digit = re.sub(r'\s', '', digit)  # removes all spaces
+        list_prices.append(int(digit))
+    list_prices.sort()
+    return list_prices
+
+
+def calculate_statistics():
+    """dict: key - price, value - number of ads with this price"""
+    dict_count = {}
+    for price in list_prices:
+        if price in dict_count:
+            dict_count[price] += 1
+        else:
+            dict_count[price] = 1
+    print(dict_count.items())
 
 
 
