@@ -18,10 +18,19 @@ def create_bd(bd_name):
         content)''')
 
 
-def insert_bd(bd_name, number, title, price, date, time, phone, place, content):
+def insert_into_bd(bd_name, number, title, price, date, time, phone, place, content):
     """insert in table"""
     conn = sqlite3.connect(bd_name)
     with conn:
         cursor = conn.cursor()
         cursor.execute('''INSERT INTO olx_parsing (number, title, price, date, time, phone, place, content)
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (number, title, price, date, time, phone, place, content))
+
+
+def select_from_bd(bd_name):
+    conn = sqlite3.connect(bd_name)
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute('''SELECT price FROM olx_parsing''')
+        all_price = cursor.fetchall()
+    return all_price

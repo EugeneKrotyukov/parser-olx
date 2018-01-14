@@ -76,23 +76,36 @@ def parse_details(html):
     # link_img = b_soup.find('div', attrs={'id': 'offerdescription'})
     return number, title, price, date, time, place, content
 
+def set_pb( a_pb, a_root):
+    global pb
+    global root
+    pb = a_pb
+    root = a_root
 
 def scrape(list_product):
+    """scrape data and write to base"""
     bd_sqlite.create_bd('olx_sqlite')
     pb_max = len(list_product)
-    print(pb_max)
+#    print(pb_max)
+    pb['maximum'] = pb_max
     for pb_current, link in enumerate(list_product, 1):
-        print(pb_current)
+#        print(pb_current)
+
+        #progress(pb_max, pb_current)
+        pb.step()
+        root.update()
+
         r = get_response(link)
         cookie = get_cookie(r)
         html = str(r.read().decode("utf-8"))
         token, id_product = token_and_id(html)
         number, title, price, date, time, place, content = parse_details(html)
         phone = get_phone(id_product, token, cookie)
-        bd_sqlite.insert_bd('olx_sqlite', number, title, price, date, time, phone, place, content)
+        bd_sqlite.insert_into_bd('olx_sqlite', number, title, price, date, time, phone, place, content)
 
 
 def get_list_product(url, number_page):
+    """get list links"""
     list_product = []
     count_page = 1 # start page
     # response = get_response(url)
