@@ -28,40 +28,46 @@ def get_url_entry(event):
 def get_statistics():
     """plotting"""
     WIDTH = 800
-    HEIGHT = 600
+    HEIGHT = 550
     prices = main.select_prices()
-    number_ads = len(prices)
-    min_price = prices[0]
     max_price = prices[-1]
+    min_price = prices[0]
+    # number_ads = len(prices)
     # number_ads_label = Label(frame2, text='Processed ads {}'.format(number_ads), font='16').pack()
     # min_price_label = Label(frame2, text='Minimum price {}'.format(min_price), font='16').pack()
     # max_price_label = Label(frame2, text='Maximum price {}'.format(max_price), font='16').pack()
+
+    number_of_offers = main.calculate_statistics(prices)
+    sort_numbers = sorted(number_of_offers.values())
+    max_number = sort_numbers[-1]
+    min_number = sort_numbers[0]
 
     x_start, y_end = 50, 50
     x_end = WIDTH - x_start  # 750
     y_start = HEIGHT - y_end  # 550
     long_x = x_end - x_start  # 700
     long_y = y_start - y_end  # 500
-
-    # МАСШТАБИРОВАНИЕ перед выводом на график
-    # для маштабирования цены на график необходимо
-    # разделить long_x на max_price и
-    # затем каждое значение умножать на полученый коэф
-    # с кол-вом объявлений необходимо проделать туже операцию
-
-    step_price = long_x // (max_price - min_price)
-    step_ads = long_y // number_ads
-
-
+    scale_x = round(long_x / max_price, 1)
+    scale_y = round(long_y / max_number, 1)
+    step_x = int((max_price - min_price) / 10)
+    if step_x < 1:
+        step_x = 1
+    step_y = int((max_number - min_number) / 10)
+    if step_y < 1:
+        step_y = 1
 
     canvas = Canvas(frame2, width=WIDTH, height=HEIGHT, bg="white")
     # grid of coordinates
-    canvas.create_line(x_start, y_start, x_end, y_start, width=2, arrow=LAST)
-    canvas.create_line(x_start, y_start, x_start, y_end, width=2, arrow=LAST)
-    for x in range(min_price, max_price, step_price):
-        canvas.create_text(x, y_start + 10, text=x)
-    for y in range(0, 500, 50):
-        canvas.create_text(x_start - 20, y_start - y, text=y)
+    canvas.create_line(x_start, y_start, x_end+(step_x*scale_x//2), y_start, width=2, arrow=LAST)
+    canvas.create_line(x_start, y_start, x_start, y_end-(step_y*scale_y//2), width=2, arrow=LAST)
+    for x in range(min_price, max_price, step_x):
+        canvas.create_text(x*scale_x+10, y_start+10, text=x)
+    for y in range(min_number, max_number+step_y, step_y):
+        canvas.create_text(x_start-20, y_start - y*scale_y, text=y)
+    # output values
+    for key, value in number_of_offers.items():
+        # print(key, value, key*scale_x, value*scale_y)
+        canvas.create_line(key*scale_x, y_start, key*scale_x, value*scale_y, width=1)
     canvas.pack()
 
 

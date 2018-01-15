@@ -131,7 +131,7 @@ def select_prices():
     return list_prices
 
 
-def calculate_statistics():
+def calculate_statistics(list_prices):
     """dict: key - price, value - number of ads with this price"""
     dict_count = {}
     for price in list_prices:
@@ -139,7 +139,7 @@ def calculate_statistics():
             dict_count[price] += 1
         else:
             dict_count[price] = 1
-    print(dict_count.items())
+    return dict_count
 
 
 
