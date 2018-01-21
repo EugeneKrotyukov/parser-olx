@@ -63,17 +63,23 @@ def parse_details(html):
     """get number, title, price, date, time, place, content"""
     b_soup = BeautifulSoup(html, 'html.parser')
     soup = b_soup.find('div', attrs={'class': 'offer-titlebox'})
-    title = soup.find('h1').text.strip() # title
-    place = soup.find('strong').text.strip() # place
-    time_date = soup.find('em').text # time and date
+    title = soup.find('h1').text.strip()  # title
+    place = soup.find('strong').text.strip()  # place
+    time_date = soup.find('em').text  # time and date
     time = re.search(r"(\d{2}:\d{2})", time_date)
     time = str(time.group(0))
     date = re.search(r"(\d{1,2}\s\w{3,9}\s\d{4})", time_date)
     date = str(date.group(0))
-    number = soup.find('small').text[18:] # number
-    price = b_soup.find('div', attrs={'class': 'price-label'}).text.strip() # price
-    content = b_soup.find('div', attrs={'id': 'textContent'}).text.strip() # content
-    # link_img = b_soup.find('div', attrs={'id': 'offerdescription'})
+    number = soup.find('small').text[18:]  # number
+    try:
+        price = b_soup.find('div', attrs={'class': 'price-label'}).text.strip()  # price
+    except AttributeError:
+        price = None
+    try:
+        content = b_soup.find('div', attrs={'id': 'textContent'}).text.strip()  # content
+    except AttributeError:
+        content = None
+    # link_img = b_soup.find('div', attrs={'id': 'offerdescription'}
     return number, title, price, date, time, place, content
 
 def set_pb( a_pb, a_root):
@@ -103,7 +109,7 @@ def scrape(list_product):
 def get_list_product(url, number_page):
     """get list links"""
     list_product = []
-    count_page = 1 # start page
+    count_page = 1  # start page
     # response = get_response(url)
     # max_page = int(get_max_page(str(response.read().decode("utf-8"))))
 
@@ -123,10 +129,11 @@ def select_prices():
     prices = bd_sqlite.select_from_bd('olx_sqlite')
     list_prices = []
     for element in prices:
-        digit = re.search(r'[0-9| ]+', element[0])  # finds all the digits
-        digit = str(digit.group(0))
-        digit = re.sub(r'\s', '', digit)  # removes all spaces
-        list_prices.append(int(digit))
+        if element[0] is not None:
+            digit = re.search(r'[0-9| ]+', element[0])  # finds all the digits
+            digit = str(digit.group(0))
+            digit = re.sub(r'\s', '', digit)  # removes all spaces
+            list_prices.append(int(digit))
     list_prices.sort()
     return list_prices
 

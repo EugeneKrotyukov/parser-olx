@@ -43,10 +43,11 @@ def get_statistics():
     min_number = sort_numbers[0]
 
     x_start, y_end = 50, 50
+    pad_x, pad_y = 10, 10
     x_end = WIDTH - x_start  # 750
     y_start = HEIGHT - y_end  # 550
     long_x = x_end - x_start  # 700
-    long_y = y_start - y_end  # 500
+    long_y = y_start - y_end  # 450
     scale_x = round(long_x / max_price, 1)
     scale_y = round(long_y / max_number, 1)
     step_x = int((max_price - min_price) / 10)
@@ -56,18 +57,32 @@ def get_statistics():
     if step_y < 1:
         step_y = 1
 
+    print('min_price:', min_price, 'max_price:', max_price)
+    print('min_number:', min_number, 'max_number:', max_number)
+    print('long_x:', long_x, 'long_y:', long_y)
+    print('scale_x:', scale_x, 'scale_y:', scale_y)
+    print('step_x:', step_x, 'step_y:', step_y)
+
     canvas = Canvas(frame2, width=WIDTH, height=HEIGHT, bg="white")
-    # grid of coordinates
-    canvas.create_line(x_start, y_start, x_end+(step_x*scale_x//2), y_start, width=2, arrow=LAST)
-    canvas.create_line(x_start, y_start, x_start, y_end-(step_y*scale_y//2), width=2, arrow=LAST)
-    for x in range(min_price, max_price, step_x):
-        canvas.create_text(x*scale_x+10, y_start+10, text=x)
-    for y in range(min_number, max_number+step_y, step_y):
-        canvas.create_text(x_start-20, y_start - y*scale_y, text=y)
+    # grid x
+    # canvas.create_line(x_start, y_start, x_end+(step_x*scale_x//2), y_start, width=2, arrow=LAST)
+    # canvas.create_line(x_start, y_start, x_start, y_end-(step_y*scale_y//2), width=2, arrow=LAST)
+    canvas.create_line(x_start, y_start, x_end + pad_x, y_start, width=2, arrow=LAST)
+    if max_price == min_price:
+        canvas.create_text(x_end - pad_x, y_start + pad_y, text=min_price)
+    else:
+        for x in range(min_price, max_price, step_x):
+            canvas.create_text(x*scale_x + x_start + pad_x, y_start + pad_y, text=x)
+    # grid y
+    canvas.create_line(x_start, y_start, x_start, y_end - pad_y, width=2, arrow=LAST)
+    if max_number == min_number:
+        canvas.create_text(x_start - pad_x, y_end + pad_y, text=min_number)
+    else:
+        for y in range(min_number, max_number+step_y, step_y):
+            canvas.create_text(x_start - 2*pad_x, y_start - y*scale_y, text=y)
     # output values
     for key, value in number_of_offers.items():
-        # print(key, value, key*scale_x, value*scale_y)
-        canvas.create_line(key*scale_x, y_start, key*scale_x, value*scale_y, width=1)
+        canvas.create_line(key*scale_x + x_start+pad_x, y_start, key*scale_x + x_start+pad_x, y_start+pad_y - value*scale_y, width=1)
     canvas.pack()
 
 

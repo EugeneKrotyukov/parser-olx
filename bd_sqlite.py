@@ -28,6 +28,7 @@ def insert_into_bd(bd_name, number, title, price, date, time, phone, place, cont
 
 
 def select_from_bd(bd_name):
+    """select price from table"""
     conn = sqlite3.connect(bd_name)
     with conn:
         cursor = conn.cursor()
