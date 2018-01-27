@@ -3,6 +3,7 @@ import re
 import urllib.request
 import urllib.error
 from bs4 import BeautifulSoup
+# from numpy import mean, std
 
 
 def get_response(url):
@@ -138,15 +139,39 @@ def select_prices():
     return list_prices
 
 
+# def filter_prices(prices):
+#    """filters prices for standard deviation"""
+#    filter_list = []
+#    # mean_price = mean(prices)
+#    std_price = std(prices)
+#    for e, price in enumerate(prices, -1):
+#        if price <= std_price:
+#            filter_list.append(price)
+#        else:
+#            if price <= prices[e] + std_price:
+#                filter_list.append(price)
+#    # filter_list = [price for price in prices if price < (mean_price+std_price)]
+#    return filter_list
+
+
 def calculate_statistics(list_prices):
     """dict: key - price, value - number of ads with this price"""
-    dict_count = {}
+    price_count = {}
     for price in list_prices:
-        if price in dict_count:
-            dict_count[price] += 1
+        if price in price_count:
+            price_count[price] += 1
         else:
-            dict_count[price] = 1
-    return dict_count
+            price_count[price] = 1
+    return price_count
+
+
+def filter_statistics(statistics):
+    """filter by values less than 1%"""
+    value = list(statistics.values())
+    threshold = max(value) // 10  # 10%
+    price_count_filter = {price: count for price, count in statistics.items() if count > threshold}
+    return price_count_filter
+
 
 
 

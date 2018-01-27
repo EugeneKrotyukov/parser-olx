@@ -37,7 +37,9 @@ def get_statistics():
     # min_price_label = Label(frame2, text='Minimum price {}'.format(min_price), font='16').pack()
     # max_price_label = Label(frame2, text='Maximum price {}'.format(max_price), font='16').pack()
 
-    number_of_offers = main.calculate_statistics(prices)
+    prices_std = main.filter_prices(prices)
+
+    number_of_offers = main.calculate_statistics(prices_std)
     sort_numbers = sorted(number_of_offers.values())
     max_number = sort_numbers[-1]
     min_number = sort_numbers[0]
