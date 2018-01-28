@@ -5,33 +5,39 @@ https://ru.wikiversity.org/wiki/%D0%9A%D1%83%D1%80%D1%81_%D0%BF%D0%BE_%D0%B1%D0%
 """
 from tkinter import *
 import tkinter.ttk as ttk
-import main
+import parser
 import plot
+import discount
 
-def get_url_button():
+def parsing_btn():
     """button START click"""
     global pb
     start_button['state'] = 'disabled'
     url = url_entry.get()
     number_page = number_page_entry.get()
     pb.grid(row=3, column=0, columnspan=2, sticky="w", padx=10, pady=10)
-    main.get_list_product(url, number_page)
+    parser.parsing(url, number_page)
     start_button['state'] = 'normal'
     pb.grid_remove()
 
 
-def get_url_entry(event):
+def parsing_entry(event):
     """enter click"""
-    get_url_button()
+    parsing_btn()
 
 
 def get_statistics():
-    """plotting in Frame2"""
+    """displays bar in Frame2"""
     plot.plotting(frame2)
 
 
 def get_discounts():
-    get_url_button()
+    """displays ads at a discount in Frame4 """
+    start_button['state'] = 'disabled'
+    url = url_entry.get()
+    number_page = number_page_entry.get()
+    discount.get_discounted_ads(url, number_page)
+    start_button['state'] = 'normal'
 
 
 def _quit():
@@ -55,7 +61,7 @@ frame2 = Frame(root)
 frame3 = Frame(root)
 frame4 = Frame(root)
 
-nb.add(frame1, text='Start')
+nb.add(frame1, text='Parser')
 nb.add(frame2, text='Statistics')
 nb.add(frame3, text='New ads')
 nb.add(frame4, text='Discounts')
@@ -64,15 +70,15 @@ nb.add(frame4, text='Discounts')
 url_label = Label(frame1, text='Enter URL', font='16')
 url_entry = Entry(frame1, width=50, font='14')
 url_entry.focus()
-url_entry.bind('<Return>', get_url_entry)
+url_entry.bind('<Return>', parsing_entry)
 number_page_label = Label(frame1, text='Enter the number of pages', font='16')
 number_page_entry = Entry(frame1, width=10, font='14')
 number_page_entry.insert(0, '1')
-number_page_entry.bind('<Return>', get_url_entry)
-start_button = Button(frame1, text="Start", command=get_url_button, font='16')
+number_page_entry.bind('<Return>', parsing_entry)
+start_button = Button(frame1, text="Parsing", command=parsing_btn, font='16')
 pb = ttk.Progressbar(frame1, orient=HORIZONTAL, length=750, mode='determinate')
 
-main.set_pb(pb, root)
+parser.set_pb(pb, root)
 
 # use grid()
 url_label.grid(row=0, column=0, sticky="w", padx=10, pady=10)
@@ -87,7 +93,6 @@ statistic_button.pack()
 
 # Frame 4
 statistic_button = Button(frame4, text="Discounts", command=get_discounts, font='16')
-statistic_button.grid()
-pb = ttk.Progressbar(frame4, orient=HORIZONTAL, length=750, mode='determinate')
+statistic_button.pack()
 
 root.mainloop()

@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def create_bd(bd_name):
+def create_bd(bd_name='olx_sqlite'):
     """create table"""
     conn = sqlite3.connect(bd_name)
     with conn:
@@ -18,7 +18,7 @@ def create_bd(bd_name):
         content)''')
 
 
-def insert_into_bd(bd_name, number, title, price, date, time, phone, place, content):
+def insert_into_bd(number, title, price, date, time, phone, place, content, bd_name='olx_sqlite'):
     """insert in table"""
     conn = sqlite3.connect(bd_name)
     with conn:
@@ -27,18 +27,17 @@ def insert_into_bd(bd_name, number, title, price, date, time, phone, place, cont
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (number, title, price, date, time, phone, place, content))
 
 
-def select_from_bd_column(bd_name, column):
+def select_from_bd_column(column, bd_name='olx_sqlite'):
     """select column from table"""
     query = 'SELECT {} FROM olx_parsing'.format(column)
     conn = sqlite3.connect(bd_name)
     with conn:
         cursor = conn.cursor()
         cursor.execute(query)
-    print(cursor.fetchall())
     return cursor.fetchall()
 
 
-def select_from_bd_value(bd_name, column, number):
+def select_from_bd_value(column, number, bd_name='olx_sqlite'):
     """select value from table"""
     query = 'SELECT {} FROM olx_parsing WHERE number={}'.format(column, number)
     conn = sqlite3.connect(bd_name)

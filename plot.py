@@ -6,14 +6,63 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg  # Рисует график на виджете tkinter
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg  # Добавляет кнопки управления для canvas
 from tkinter import *
-import main
+import bd_sqlite
+import scraper
+
+def select_prices():
+    """get list of prices"""
+    prices = bd_sqlite.select_from_bd_column('price')
+    list_prices = []
+    for element in prices:
+        if element[0] is not None:
+            price = scraper.get_digits(element[0])
+            # digit = re.search(r'[0-9| ]+', element[0])  # finds all the digits
+            # digit = str(digit.group(0))
+            # digit = re.sub(r'\s', '', digit)  # removes all spaces
+            list_prices.append(int(price))
+    # list_prices.sort()
+    return list_prices
+
+
+# def filter_prices(prices):
+#    """filters prices for standard deviation"""
+#    filter_list = []
+#    # mean_price = mean(prices)
+#    std_price = std(prices)
+#    for e, price in enumerate(prices, -1):
+#        if price <= std_price:
+#            filter_list.append(price)
+#        else:
+#            if price <= prices[e] + std_price:
+#                filter_list.append(price)
+#    # filter_list = [price for price in prices if price < (mean_price+std_price)]
+#    return filter_list
+
+
+def calculate_statistics(list_prices):
+    """dict: key - price, value - number of ads with this price"""
+    price_count = {}
+    for price in list_prices:
+        if price in price_count:
+            price_count[price] += 1
+        else:
+            price_count[price] = 1
+    return price_count
+
+
+# def filter_statistics(statistics):
+#    """filter by values less than 1%"""
+#    value = list(statistics.values())
+#    threshold = max(value) // 10  # 10%
+#    price_count_filter = {price: count for price, count in statistics.items() if count > threshold}
+#    return price_count_filter
 
 
 def plotting(root):
     """plotting bar"""
-    prices = main.select_prices()
+    prices = select_prices()
     # filter_std = main.filter_prices(prices)
-    price_count = main.calculate_statistics(prices)
+    price_count = calculate_statistics(prices)
     # price_count_filter = main.filter_statistics(price_count)
     x = list(price_count.keys())
     y = list(price_count.values())
