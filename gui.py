@@ -30,6 +30,10 @@ def get_statistics():
     plot.plotting(frame2)
 
 
+def get_discounts():
+    get_url_button()
+
+
 def _quit():
     """quit"""
     root.quit()
@@ -66,7 +70,7 @@ number_page_entry = Entry(frame1, width=10, font='14')
 number_page_entry.insert(0, '1')
 number_page_entry.bind('<Return>', get_url_entry)
 start_button = Button(frame1, text="Start", command=get_url_button, font='16')
-pb = ttk.Progressbar(frame1, orient=HORIZONTAL, length=760, mode='determinate')
+pb = ttk.Progressbar(frame1, orient=HORIZONTAL, length=750, mode='determinate')
 
 main.set_pb(pb, root)
 
@@ -77,10 +81,13 @@ number_page_label.grid(row=1, column=0, sticky="w", padx=10, pady=10)
 number_page_entry.grid(row=1, column=1, sticky="w")
 start_button.grid(row=2, column=1, sticky="w")
 
-
 # Frame 2
 statistic_button = Button(frame2, text="Plotting", command=get_statistics, font='16')
 statistic_button.pack()
 
+# Frame 4
+statistic_button = Button(frame4, text="Discounts", command=get_discounts, font='16')
+statistic_button.grid()
+pb = ttk.Progressbar(frame4, orient=HORIZONTAL, length=750, mode='determinate')
 
 root.mainloop()

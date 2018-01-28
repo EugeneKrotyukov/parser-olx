@@ -5,6 +5,11 @@ import urllib.error
 from bs4 import BeautifulSoup
 # from numpy import mean, std
 
+"""
+crawling - переход по страницам и ссылкам
+scraping - сбор информации
+parsing - crawling + scraping
+"""
 
 def get_response(url):
     """get html"""
@@ -44,13 +49,14 @@ def token_and_id(html):
 
 def get_phone(id_product, token, cookie):
     """get phone"""
+    # 295659644
     url = 'https://www.olx.ua/ajax/misc/contact/phone/' + id_product +'/?pt=' + token
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/53.0.2785.143 Chrome/53.0.2785.143 Safari/537.36'
     r = urllib.request.Request(url, headers={'user-agent': user_agent, 'Cookie': cookie})
     try:
         phone_response = urllib.request.urlopen(r)
         str_phone_response = str(phone_response.read().decode("utf-8"))
-        if 'block' in phone_response:
+        if len(str_phone_response) > 30:
             phone = re.search(r'(?<=">)[\w\W]*?(?=<)', str_phone_response)
         else:
             phone = re.search(r'(?<=":")[\w\W]*?(?=")', str_phone_response)
@@ -84,7 +90,7 @@ def parse_details(html):
     return number, title, price, date, time, place, content
 
 def set_pb( a_pb, a_root):
-    """set """
+    """set progressbar, root for GUI"""
     global pb, root
     pb = a_pb
     root = a_root
@@ -104,6 +110,12 @@ def scrape(list_product):
         token, id_product = token_and_id(html)
         number, title, price, date, time, place, content = parse_details(html)
         phone = get_phone(id_product, token, cookie)
+
+        # numbers = bd_sqlite.select_from_bd_column('olx_sqlite', 'number')
+        # if number in numbers:
+        #    price = bd_sqlite.select_from_bd_value('olx_sqlite', 'price', number)
+        #    print(price)
+
         bd_sqlite.insert_into_bd('olx_sqlite', number, title, price, date, time, phone, place, content)
 
 
@@ -127,7 +139,8 @@ def get_list_product(url, number_page):
 
 def select_prices():
     """get list of prices"""
-    prices = bd_sqlite.select_from_bd('olx_sqlite')
+    prices = bd_sqlite.select_from_bd_column('olx_sqlite', 'price')
+    print(prices)
     list_prices = []
     for element in prices:
         if element[0] is not None:
@@ -136,6 +149,7 @@ def select_prices():
             digit = re.sub(r'\s', '', digit)  # removes all spaces
             list_prices.append(int(digit))
     list_prices.sort()
+    print(list_prices)
     return list_prices
 
 
@@ -165,12 +179,12 @@ def calculate_statistics(list_prices):
     return price_count
 
 
-def filter_statistics(statistics):
-    """filter by values less than 1%"""
-    value = list(statistics.values())
-    threshold = max(value) // 10  # 10%
-    price_count_filter = {price: count for price, count in statistics.items() if count > threshold}
-    return price_count_filter
+# def filter_statistics(statistics):
+#    """filter by values less than 1%"""
+#    value = list(statistics.values())
+#    threshold = max(value) // 10  # 10%
+#    price_count_filter = {price: count for price, count in statistics.items() if count > threshold}
+#    return price_count_filter
 
 
 

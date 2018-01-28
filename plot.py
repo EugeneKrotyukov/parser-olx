@@ -14,9 +14,9 @@ def plotting(root):
     prices = main.select_prices()
     # filter_std = main.filter_prices(prices)
     price_count = main.calculate_statistics(prices)
-    price_count_filter = main.filter_statistics(price_count)
-    x = list(price_count_filter.keys())
-    y = list(price_count_filter.values())
+    # price_count_filter = main.filter_statistics(price_count)
+    x = list(price_count.keys())
+    y = list(price_count.values())
     width_bar = len(x) * 2
 
     # bar
