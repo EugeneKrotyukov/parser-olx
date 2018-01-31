@@ -9,6 +9,7 @@ from tkinter import *
 import bd_sqlite
 import scraper
 
+
 def select_prices():
     """get list of prices"""
     prices = bd_sqlite.select_from_bd_column('price')
