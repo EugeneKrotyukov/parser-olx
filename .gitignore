@@ -3,3 +3,5 @@ olx_sqlite
 test_scrape.py
 test_select_from_bd.py
 test_matplotlib.py
+test_get_links_to_ads.py
+test-sqlite.py

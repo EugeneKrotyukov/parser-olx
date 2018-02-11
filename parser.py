@@ -3,11 +3,11 @@ import bd_sqlite
 import urllib.request
 
 
-def set_pb( a_pb, a_root):
-    """set progressbar and root for GUI"""
-    global pb, root
-    pb = a_pb
-    root = a_root
+def set_pb(frame, widget):
+    """set frame and progressbar for GUI"""
+    global window, pb
+    pb = widget
+    window = frame
 
 
 def parsing(url, number_page):
@@ -31,12 +31,13 @@ def parsing(url, number_page):
             # detailed information on the ads
             for link in reference_list:
                 pb.step()
-                root.update()
+                window.update()
                 r = scraper.get_response(link)
                 cookie = scraper.get_cookie(r)
                 html = str(r.read().decode("utf-8"))
                 token, id_product = scraper.token_and_id(html)
-                number, title, price, date, time, place, content = scraper.get_details(html)
+                number, title, price_ua, date, time, place, content = scraper.get_details(html)
                 phone = scraper.get_phone(id_product, token, cookie)
+                price = int(scraper.get_digits(price_ua))
                 # write to bd
                 bd_sqlite.insert_into_bd(number, title, price, date, time, phone, place, content)

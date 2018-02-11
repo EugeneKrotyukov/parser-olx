@@ -7,37 +7,36 @@ from tkinter import *
 import tkinter.ttk as ttk
 import parser
 import plot
-import discount
+import change
 
-def parsing_btn():
-    """button START click"""
+
+def parsing():
+    """button PARSING click"""
     global pb
-    start_button['state'] = 'disabled'
+    parsing_btn['state'] = 'disabled'
     url = url_entry.get()
     number_page = number_page_entry.get()
-    pb.grid(row=3, column=0, columnspan=2, sticky="w", padx=10, pady=10)
+    pb.grid(row=3, column=0, columnspan=4, sticky="w", padx=10, pady=10)
     parser.parsing(url, number_page)
-    start_button['state'] = 'normal'
+    parsing_btn['state'] = 'normal'
     pb.grid_remove()
 
 
 def parsing_entry(event):
-    """enter click"""
-    parsing_btn()
+    """ENTER click"""
+    parsing()
 
 
-def get_statistics():
+def statistics():
     """displays bar in Frame2"""
     plot.plotting(frame2)
 
 
-def get_discounts():
-    """displays ads at a discount in Frame4 """
-    start_button['state'] = 'disabled'
+def price_changes():
+    """displays ads at a price changes in Frame4 """
     url = url_entry.get()
     number_page = number_page_entry.get()
-    discount.get_discounted_ads(url, number_page)
-    start_button['state'] = 'normal'
+    change.get_change(url, number_page)
 
 
 def _quit():
@@ -49,12 +48,12 @@ def _quit():
 root = Tk()
 root.title('Scrape olx.ua')
 root.geometry('800x600')
+root.resizable(width=False, height=False)
 
 nb = ttk.Notebook(root)
 nb.pack()
 
-button = Button(master=root, text='Quit', command=_quit, font='16')
-button.pack(side=BOTTOM)
+quit_btn = Button(master=root, text='Quit', command=_quit, font=16).pack(side=BOTTOM)
 
 frame1 = Frame(root)
 frame2 = Frame(root)
@@ -64,35 +63,38 @@ frame4 = Frame(root)
 nb.add(frame1, text='Parser')
 nb.add(frame2, text='Statistics')
 nb.add(frame3, text='New ads')
-nb.add(frame4, text='Discounts')
+nb.add(frame4, text='Price Changes')
 
 # Frame 1
-url_label = Label(frame1, text='Enter URL', font='16')
-url_entry = Entry(frame1, width=50, font='14')
+url_lbl = Label(frame1, text='URL', font=16)
+url_lbl.grid(row=0, column=0, sticky='w', padx=10, pady=10)
+url_entry = Entry(frame1, width=62, font=14)
 url_entry.focus()
 url_entry.bind('<Return>', parsing_entry)
-number_page_label = Label(frame1, text='Enter the number of pages', font='16')
-number_page_entry = Entry(frame1, width=10, font='14')
-number_page_entry.insert(0, '1')
+url_entry.grid(row=0, column=1, columnspan=4, sticky='w')
+number_page_lbl = Label(frame1, text='Number of Pages', font=16)
+number_page_lbl.grid(row=1, column=0, sticky='w', padx=10, pady=10)
+number_page_entry = Entry(frame1, width=10, font=14)
+number_page_entry.insert(0, 1)
 number_page_entry.bind('<Return>', parsing_entry)
-start_button = Button(frame1, text="Parsing", command=parsing_btn, font='16')
+number_page_entry.grid(row=1, column=1, sticky='w')
+parsing_btn = Button(frame1, text="Parsing", command=parsing, font=16)
+parsing_btn.grid(row=2, column=2, sticky='w')
 pb = ttk.Progressbar(frame1, orient=HORIZONTAL, length=750, mode='determinate')
-
-parser.set_pb(pb, root)
-
-# use grid()
-url_label.grid(row=0, column=0, sticky="w", padx=10, pady=10)
-url_entry.grid(row=0, column=1, sticky="w")  # columnspan=2
-number_page_label.grid(row=1, column=0, sticky="w", padx=10, pady=10)
-number_page_entry.grid(row=1, column=1, sticky="w")
-start_button.grid(row=2, column=1, sticky="w")
+parser.set_pb(root, pb)
 
 # Frame 2
-statistic_button = Button(frame2, text="Plotting", command=get_statistics, font='16')
-statistic_button.pack()
+statistic_btn = Button(frame2, text="Plotting", command=statistics, font=16)
+statistic_btn.pack()
+
+# Frame 3
 
 # Frame 4
-statistic_button = Button(frame4, text="Discounts", command=get_discounts, font='16')
-statistic_button.pack()
+changes_btn = Button(frame4, text="Price Changes", command=price_changes, font=16)
+changes_btn.pack()
+changes_lstbox = Listbox(frame4, width=750,	height=25,	font=10)
+changes_lstbox.pack()
+change.set_lstbox(frame4, changes_lstbox)
+
 
 root.mainloop()

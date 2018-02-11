@@ -30,7 +30,7 @@ def get_response(url):
 
 
 def check_number_page(url, number_page):
-    if number_page.isdigit()
+    if number_page.isdigit():
         # get the last page
         response = get_response(url)
         html = str(response.read().decode("utf-8"))
@@ -99,7 +99,7 @@ def get_details(html):
     try:
         price = b_soup.find('div', attrs={'class': 'price-label'}).text.strip()  # price
     except AttributeError:
-        price = None
+        price = 0
     try:
         content = b_soup.find('div', attrs={'id': 'textContent'}).text.strip()  # content
     except AttributeError:

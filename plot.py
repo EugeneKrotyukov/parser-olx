@@ -12,17 +12,9 @@ import scraper
 
 def select_prices():
     """get list of prices"""
-    prices = bd_sqlite.select_from_bd_column('price')
-    list_prices = []
-    for element in prices:
-        if element[0] is not None:
-            price = scraper.get_digits(element[0])
-            # digit = re.search(r'[0-9| ]+', element[0])  # finds all the digits
-            # digit = str(digit.group(0))
-            # digit = re.sub(r'\s', '', digit)  # removes all spaces
-            list_prices.append(int(price))
-    # list_prices.sort()
-    return list_prices
+    prices_bd = bd_sqlite.select_from_bd_column('price')
+    prices = [item for sublist in prices_bd for item in sublist]
+    return prices
 
 
 # def filter_prices(prices):
