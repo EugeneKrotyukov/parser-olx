@@ -1,5 +1,5 @@
 __pycache__
-olx_sqlite
+olx.sqlite3
 test_scrape.py
 test_select_from_bd.py
 test_matplotlib.py

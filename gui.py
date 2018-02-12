@@ -16,9 +16,9 @@ def parsing():
     parsing_btn['state'] = 'disabled'
     url = url_entry.get()
     number_page = number_page_entry.get()
-    table_name = table_name_entry.get()
+    query_name = query_name_entry.get()
     pb.grid(row=4, column=0, columnspan=4, sticky="w", padx=10, pady=10)
-    parser.check(url, number_page, table_name)
+    parser.check(url, number_page, query_name)
     parsing_btn['state'] = 'normal'
     pb.grid_remove()
 
@@ -81,11 +81,11 @@ number_page_entry.insert(0, 1)
 number_page_entry.bind('<Return>', parsing_entry)
 number_page_entry.grid(row=1, column=1, sticky='w')
 
-table_name_lbl = Label(frame1, text='Query Name', font=16)
-table_name_lbl.grid(row=2, column=0, sticky='w', padx=10, pady=10)
-table_name_entry = Entry(frame1, width=62, font=14)
-table_name_entry.bind('<Return>', parsing_entry)
-table_name_entry.grid(row=2, column=1, columnspan=4, sticky='w')
+query_name_lbl = Label(frame1, text='Query Name', font=16)
+query_name_lbl.grid(row=2, column=0, sticky='w', padx=10, pady=10)
+query_name_entry = Entry(frame1, width=62, font=14)
+query_name_entry.bind('<Return>', parsing_entry)
+query_name_entry.grid(row=2, column=1, columnspan=4, sticky='w')
 
 parsing_btn = Button(frame1, text="Parsing", command=parsing, font=16)
 parsing_btn.grid(row=3, column=2, sticky='w')

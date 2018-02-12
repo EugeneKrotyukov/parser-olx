@@ -11,10 +11,11 @@ def set_pb(frame, widget):
     window = frame
 
 
-def parsing(url, number_page, table_name):
-
-    # bd_sqlite.create_query_table()
-    bd_sqlite.insert_into_query_table(table_name, url, number_page)
+def parsing(url, number_page, query_name):
+    bd_sqlite.create_query_table()
+    bd_sqlite.insert_into_query_table(query_name, url, number_page)
+    table_name = bd_sqlite.select_last_insert()
+    table_name = 'table' + str(table_name[0])
 
     reference_list = []
     count_page = 1  # start page
@@ -28,7 +29,7 @@ def parsing(url, number_page, table_name):
         count_page += 1
 
     bd_sqlite.create_parsing_table(table_name)
-
+'''
     pb['maximum'] = len(reference_list)
     # detailed information on the ads
     for link in reference_list:
@@ -43,16 +44,21 @@ def parsing(url, number_page, table_name):
         price = int(scraper.get_digits(price_ua))
 
         bd_sqlite.insert_into_parsing_table(table_name, number, title, price, date, time, phone, place, content)
+'''
 
-
-def check(url, number_page, table_name):
+def check(url, number_page, query_name):
     """input validation"""
+    # bd_sqlite.create_query_table()
     if url.startswith('https://www.olx.ua/'):
         pass
     else:
         return False
-    if len(table_name) > 0:
+    if len(query_name) > 0:
         pass
+        # table_names_from_bd = bd_sqlite.select_from_bd_column('table_name', 'query_table')
+        # table_names = [item for sublist in table_names_from_bd for item in sublist]
+        # if table_name in table_names:
+        #    return False
     else:
         return False
     if number_page.isdigit():
@@ -63,6 +69,6 @@ def check(url, number_page, table_name):
         max_page = str(max_page.group(0))
         if number_page > max_page:
             number_page = max_page
-        parsing(url, number_page, table_name)
+        parsing(url, number_page, query_name)
     else:
         return False
