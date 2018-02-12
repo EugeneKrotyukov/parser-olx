@@ -9,11 +9,12 @@ scraping - сбор информации
 parsing - crawling + scraping
 """
 
-def check_url(url):
-    if url.startswith('https://www.olx.ua/'):
-        return True
-    else:
-        return False
+
+# def check_url(url):
+#    if url.startswith('https://www.olx.ua/'):
+#        return True
+#    else:
+#        return False
 
 
 def get_response(url):
@@ -29,19 +30,19 @@ def get_response(url):
 #    return str(max_page.group(0))
 
 
-def check_number_page(url, number_page):
-    if number_page.isdigit():
-        # get the last page
-        response = get_response(url)
-        html = str(response.read().decode("utf-8"))
-        max_page = re.search(r'(?<="page_count":").*?(?=")', html)
-        max_page = str(max_page.group(0))
+# def check_number_page(url, number_page):
+#    if number_page.isdigit():
+#        # get the last page
+#        response = get_response(url)
+#        html = str(response.read().decode("utf-8"))
+#        max_page = re.search(r'(?<="page_count":").*?(?=")', html)
+#        max_page = str(max_page.group(0))
 
-        if number_page > max_page:
-            number_page = max_page
-        return number_page
-    else:
-        return False
+#        if number_page > max_page:
+#            number_page = max_page
+#        return number_page
+#    else:
+#        return False
 
 
 def get_links_to_ads(html):
