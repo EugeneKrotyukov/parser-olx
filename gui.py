@@ -8,6 +8,7 @@ import tkinter.ttk as ttk
 import parser
 import plot
 import change
+import bd_sqlite
 
 
 def parsing():
@@ -30,6 +31,7 @@ def parsing_entry(event):
 
 def statistics():
     """displays bar in Frame2"""
+    # bd_sqlite.
     plot.plotting(frame2)
 
 

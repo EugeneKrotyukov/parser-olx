@@ -29,7 +29,7 @@ def parsing(url, number_page, query_name):
         count_page += 1
 
     bd_sqlite.create_parsing_table(table_name)
-'''
+
     pb['maximum'] = len(reference_list)
     # detailed information on the ads
     for link in reference_list:
@@ -44,7 +44,7 @@ def parsing(url, number_page, query_name):
         price = int(scraper.get_digits(price_ua))
 
         bd_sqlite.insert_into_parsing_table(table_name, number, title, price, date, time, phone, place, content)
-'''
+
 
 def check(url, number_page, query_name):
     """input validation"""
