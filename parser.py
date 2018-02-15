@@ -11,6 +11,13 @@ def set_pb(frame, widget):
     window = frame
 
 
+def set_lstbox(frame, widget):
+    """set frame and listbox for GUI"""
+    global window, lstbox
+    window = frame
+    lstbox = widget
+
+
 def parsing(url, number_page, query_name):
     bd_sqlite.create_query_table()
     bd_sqlite.insert_into_query_table(query_name, url, number_page)
@@ -45,20 +52,20 @@ def parsing(url, number_page, query_name):
 
         bd_sqlite.insert_into_parsing_table(table_name, number, title, price, date, time, phone, place, content)
 
+        lstbox.delete(0, 16)
+        query = bd_sqlite.select_from_query_table_all()
+        for e, row in enumerate(query):
+            lstbox.insert(e, row)
+
 
 def check(url, number_page, query_name):
     """input validation"""
-    # bd_sqlite.create_query_table()
     if url.startswith('https://www.olx.ua/'):
         pass
     else:
         return False
     if len(query_name) > 0:
         pass
-        # table_names_from_bd = bd_sqlite.select_from_bd_column('table_name', 'query_table')
-        # table_names = [item for sublist in table_names_from_bd for item in sublist]
-        # if table_name in table_names:
-        #    return False
     else:
         return False
     if number_page.isdigit():

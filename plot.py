@@ -51,12 +51,14 @@ def calculate_statistics(list_prices):
 #    return price_count_filter
 
 
-def plotting(root):
+def plotting(window, id_table):
     """plotting bar"""
-    prices = select_prices()
-    # filter_std = main.filter_prices(prices)
+    table_name = 'table{}'.format(id_table)
+    prices_from_bd = bd_sqlite.select_from_parsing_table_column('price', table_name)
+    prices = [item for sublist in prices_from_bd for item in sublist]
+    print(prices)
     price_count = calculate_statistics(prices)
-    # price_count_filter = main.filter_statistics(price_count)
+    print(price_count)
     x = list(price_count.keys())
     y = list(price_count.values())
     width_bar = len(x) * 2
@@ -70,11 +72,11 @@ def plotting(root):
     ax.set_ylabel('Number of offers')
 
     # tk.DrawingArea
-    canvas = FigureCanvasTkAgg(fig, master=root)
+    canvas = FigureCanvasTkAgg(fig, master=window)
     canvas.show()
     canvas.get_tk_widget().pack()
 
     # adds control buttons for canvas
-    toolbar = NavigationToolbar2TkAgg(canvas, root)
-    toolbar.update()
-    canvas._tkcanvas.pack()
+    # toolbar = NavigationToolbar2TkAgg(canvas, window)
+    # toolbar.update()
+    # canvas._tkcanvas.pack()
