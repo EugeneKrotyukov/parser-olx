@@ -48,6 +48,17 @@ def select_last_insert(bd_name='olx.sqlite3'):
     return cursor.fetchone()
 
 
+def select_from_query_table_value(row, bd_name='olx.sqlite3'):
+    """select url, number_page from query_table"""
+    query = "SELECT * FROM query_table WHERE id='{row}'".format(row=row)
+    conn = sqlite3.connect(bd_name)
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+    return cursor.fetchall()
+
+
+
 def create_parsing_table(table_name, bd_name='olx.sqlite3'):
     """create parsing_table"""
     conn = sqlite3.connect(bd_name)
@@ -84,7 +95,7 @@ def select_from_parsing_table_column(column, table_name, bd_name='olx.sqlite3'):
     return cursor.fetchall()
 
 
-def select_from_bd_value(column, table_name, row, bd_name='olx.sqlite3'):
+def select_from_parsing_table_value(column, table_name, row, bd_name='olx.sqlite3'):
     """select value from table"""
     query = "SELECT {column} FROM {table_name} WHERE number='{row}'".format(column=column, table_name=table_name, row=row)
     conn = sqlite3.connect(bd_name)

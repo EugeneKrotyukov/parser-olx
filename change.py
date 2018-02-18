@@ -3,6 +3,13 @@ import scraper
 from bs4 import BeautifulSoup
 
 
+def set_pb(frame, widget):
+    """set frame and progressbar for GUI"""
+    global window, pb
+    pb = widget
+    window = frame
+
+
 def set_lstbox(frame, widget):
     """set frame and listbox for GUI"""
     global window, lstbox
@@ -31,8 +38,14 @@ def format_string(string, width):
     return string
 
 
-def get_change(url, number_page):
-    ad_numbers_from_bd = bd_sqlite.select_from_bd_column('number')
+def get_change(window, id_table):
+    """ads with a changed price"""
+    table_name = 'table{}'.format(id_table)
+    query_table_from_bd = bd_sqlite.select_from_query_table_value(id_table)
+    query_table = [item for sublist in query_table_from_bd for item in sublist]
+    url = query_table[2]
+    number_page = query_table[3]
+    ad_numbers_from_bd = bd_sqlite.select_from_parsing_table_column('number', table_name)
     ad_numbers = [item for sublist in ad_numbers_from_bd for item in sublist]
 
     reference_list = []
@@ -51,14 +64,17 @@ def get_change(url, number_page):
     header = '|{}|{}|{}|{}|'.format('Ad Number'.center(13), 'Title'.center(77), 'Old Price, UAH'.center(16), 'New Price, UAH'.center(16))
     lstbox.insert(line, header)
 
+    pb['maximum'] = len(reference_list)
     # detailed information on the ads
     for link in reference_list:
+        pb.step()
+        window.update()
         r = scraper.get_response(link)
         html = str(r.read().decode("utf-8"))
         number, title, new_price = get_data(html)
         new_price = int(scraper.get_digits(new_price))
         if number in ad_numbers:
-            price_from_bd = bd_sqlite.select_from_bd_value('price', number)
+            price_from_bd = bd_sqlite.select_from_parsing_table_value('price', table_name, number)
             old_price = price_from_bd[0]
             if new_price != old_price:
                 number = str(number).center(11, ' ')

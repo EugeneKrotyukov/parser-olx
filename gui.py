@@ -18,10 +18,10 @@ def parsing():
     url = url_entry.get()
     number_page = number_page_entry.get()
     query_name = query_name_entry.get()
-    pb.grid(row=5, column=0, columnspan=4, sticky="w", padx=10, pady=10)
+    # pb.grid(row=5, column=0, columnspan=4, sticky="w", padx=10, pady=10)
     parser.check(url, number_page, query_name)
     parsing_btn['state'] = 'normal'
-    pb.grid_remove()
+    # pb.grid_remove()
 
 
 def parsing_entry(event):
@@ -34,10 +34,16 @@ def statistics():
     id_query = query_entry.get()
     plot.plotting(frame22, id_query)
 
+
 def price_changes():
     """displays ads at a price changes in Frame4 """
+    changes_btn['state'] = 'disabled'
     id_query = query_entry.get()
-    change.get_change(url, number_page)
+    changes_lstbox = Listbox(frame42, width=750,	height=23,	font=10)
+    changes_lstbox.pack()
+    change.set_lstbox(frame42, changes_lstbox)
+    change.get_change(frame42, id_query)
+    changes_btn['state'] = 'normal'
 
 
 def _quit():
@@ -54,7 +60,7 @@ root.resizable(width=False, height=False)
 nb = ttk.Notebook(root)  #закладки
 nb.pack()
 
-quit_btn = Button(master=root, text='Quit', command=_quit, font=16).pack(side=BOTTOM)
+
 
 frame1 = Frame(root)
 frame2 = Frame(root)
@@ -66,6 +72,13 @@ frame32 = Frame(frame3)
 frame4 = Frame(root)
 frame41 = Frame(frame4)
 frame42 = Frame(frame4)
+
+frame5 = Frame(root)
+frame5.pack()
+pb = ttk.Progressbar(frame5, orient=HORIZONTAL, length=792, mode='determinate')
+pb.pack()
+quit_btn = Button(frame5, text='Quit', command=_quit, font=16)
+quit_btn.pack(side=BOTTOM)
 
 nb.add(frame1, text='Parser')
 nb.add(frame2, text='Statistics')
@@ -96,15 +109,15 @@ query_name_entry.grid(row=2, column=1, columnspan=4, sticky='w')
 parsing_btn = Button(frame1, text="Parsing", command=parsing, font=16)
 parsing_btn.grid(row=3, column=2, sticky='w')
 
-query_lstbox = Listbox(frame1, height=16, font=10)
+query_lstbox = Listbox(frame1, height=17, font=10)
 query_lstbox.grid(row=4, column=0, columnspan=5, sticky='we', pady=10)
 parser.set_lstbox(frame1, query_lstbox)
 query = bd_sqlite.select_from_query_table_all()
 for e, row in enumerate(query):
     query_lstbox.insert(e, row)
 
-pb = ttk.Progressbar(frame1, orient=HORIZONTAL, length=750, mode='determinate')
-parser.set_pb(root, pb)
+# pb = ttk.Progressbar(frame1, orient=HORIZONTAL, length=750, mode='determinate')
+parser.set_pb(frame5, pb)
 
 # Frame 2
 # frame21.place(relx=0.5, rely=0.04, anchor=CENTER)
@@ -122,12 +135,20 @@ frame22.pack()
 # Frame 3
 
 # Frame 4
-
-changes_btn = Button(frame4, text="Price Changes", command=price_changes, font=16)
-changes_btn.pack()
-changes_lstbox = Listbox(frame4, width=750,	height=25,	font=10)
-changes_lstbox.pack()
-change.set_lstbox(frame4, changes_lstbox)
+frame41.pack()
+changes_lbl = Label(frame41, text='Enter ID', font=16)
+changes_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
+changes_entry = Entry(frame41, width=10, font=14)
+changes_entry.focus()
+changes_entry.insert(0, 1)
+changes_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
+changes_btn = Button(frame41, text="Price Changes", command=price_changes, font=16)
+changes_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
+frame42.pack()
+change.set_pb(frame5, pb)
+# changes_lstbox = Listbox(frame42, width=750,	height=25,	font=10)
+# changes_lstbox.pack()
+# change.set_lstbox(frame42, changes_lstbox)
 
 
 root.mainloop()

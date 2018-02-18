@@ -53,12 +53,14 @@ def calculate_statistics(list_prices):
 
 def plotting(window, id_table):
     """plotting bar"""
+    # plt.clf()
+    # fig.clf()
+    # plt.gcf().clear()
+
     table_name = 'table{}'.format(id_table)
     prices_from_bd = bd_sqlite.select_from_parsing_table_column('price', table_name)
     prices = [item for sublist in prices_from_bd for item in sublist]
-    print(prices)
     price_count = calculate_statistics(prices)
-    print(price_count)
     x = list(price_count.keys())
     y = list(price_count.values())
     width_bar = len(x) * 2
