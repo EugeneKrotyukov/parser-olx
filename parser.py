@@ -1,7 +1,8 @@
-import scraper
-import bd_sqlite
 import urllib.request
 import re
+import scraper
+import bd_sqlite
+import utility
 
 
 def set_pb(frame, widget):
@@ -53,9 +54,19 @@ def parsing(url, number_page, query_name):
         bd_sqlite.insert_into_parsing_table(table_name, number, title, price, date, time, phone, place, content)
 
         lstbox.delete(0, 16)
-        query = bd_sqlite.select_from_query_table_all()
-        for e, row in enumerate(query):
-            lstbox.insert(e, row)
+        header = ' {} {} {} {} '.format('ID'.center(4, ' '),
+                                        'Query Name'.center(25, ' '),
+                                        'Url'.center(40, ' '),
+                                        'N page'.center(8, ' '))
+        lstbox.insert(0, header)
+        data_from_query_table = bd_sqlite.select_from_query_table_all()
+        for line, row in enumerate(data_from_query_table, 1):
+            id_q = str(row[0]).center(4, ' ')
+            name_q = utility.format_string(row[1], 25)
+            url_q = utility.format_string(row[2], 40)
+            page_q = str(row[3]).center(8, ' ')
+            output = ' {} {} {} {} '.format(id_q, name_q, url_q, page_q)
+            lstbox.insert(line, output)
 
 
 def check(url, number_page, query_name):

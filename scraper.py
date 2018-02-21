@@ -105,7 +105,6 @@ def get_details(html):
         content = b_soup.find('div', attrs={'id': 'textContent'}).text.strip()  # content
     except AttributeError:
         content = None
-    # link_img = b_soup.find('div', attrs={'id': 'offerdescription'}
     return number, title, price, date, time, place, content
 
 
