@@ -20,6 +20,8 @@ def parsing():
     url = url_entry.get()
     number_page = number_page_entry.get()
     query_name = query_name_entry.get()
+    parser.set_lstbox(frame11, query_lstbox)
+    parser.set_pb(frame5, pb)
     parser.check(url, number_page, query_name)
     parsing_btn['state'] = 'normal'
 
@@ -27,6 +29,12 @@ def parsing():
 def parsing_entry(event):
     """ENTER click"""
     parsing()
+
+
+def del_query():
+    utility.set_lstbox(frame11, query_lstbox)
+    id_query = del_entry.get()
+    utility.del_query(id_query)
 
 
 def statistics():
@@ -42,6 +50,7 @@ def new_ads():
     new_lstbox = Listbox(frame32, width=750, height=23, font=10)
     new_lstbox.pack()
     new_ad.set_lstbox(frame32, new_lstbox)
+    new_ad.set_pb(frame5, pb)
     new_ad.get_new_ad(frame32, id_query)
     new_btn['state'] = 'normal'
 
@@ -53,6 +62,7 @@ def price_changes():
     changes_lstbox = Listbox(frame42, width=750,	height=23,	font=10)
     changes_lstbox.pack()
     change.set_lstbox(frame42, changes_lstbox)
+    change.set_pb(frame5, pb)
     change.get_change(frame42, id_query)
     changes_btn['state'] = 'normal'
 
@@ -72,6 +82,8 @@ nb = ttk.Notebook(root)  # закладки
 nb.pack()
 
 frame1 = Frame(root)
+frame11 = Frame(frame1)
+frame12 = Frame(frame1)
 frame2 = Frame(root)
 frame21 = Frame(frame2)
 frame22 = Frame(frame2)
@@ -85,7 +97,7 @@ frame5 = Frame(root)
 frame5.pack()
 
 pb = ttk.Progressbar(frame5, orient=HORIZONTAL, length=792, mode='determinate')
-pb.pack()
+pb.pack(pady=5)
 quit_btn = Button(frame5, text='Quit', command=_quit, font=16)
 quit_btn.pack(side=BOTTOM)
 
@@ -95,48 +107,57 @@ nb.add(frame3, text='New ads')
 nb.add(frame4, text='Price Changes')
 
 # Frame 1
-url_lbl = Label(frame1, text='URL', font=16)
-url_lbl.grid(row=0, column=0, sticky='w', padx=10, pady=10)
-url_entry = Entry(frame1, width=62, font=14)
+frame11.pack()
+url_lbl = Label(frame11, text='URL', font=16)
+url_lbl.grid(row=0, column=0, sticky='w', padx=10, pady=5)
+url_entry = Entry(frame11, width=62, font=14)
 url_entry.focus()
 url_entry.bind('<Return>', parsing_entry)
 url_entry.grid(row=0, column=1, columnspan=4, sticky='w')
 
-number_page_lbl = Label(frame1, text='Number of Pages', font=16)
-number_page_lbl.grid(row=1, column=0, sticky='w', padx=10, pady=10)
-number_page_entry = Entry(frame1, width=10, font=14)
+number_page_lbl = Label(frame11, text='Number of Pages', font=16)
+number_page_lbl.grid(row=1, column=0, sticky='w', padx=10, pady=5)
+number_page_entry = Entry(frame11, width=10, font=14)
 number_page_entry.insert(0, 1)
 number_page_entry.bind('<Return>', parsing_entry)
 number_page_entry.grid(row=1, column=1, sticky='w')
 
-query_name_lbl = Label(frame1, text='Query Name', font=16)
-query_name_lbl.grid(row=2, column=0, sticky='w', padx=10, pady=10)
-query_name_entry = Entry(frame1, width=62, font=14)
+query_name_lbl = Label(frame11, text='Query Name', font=16)
+query_name_lbl.grid(row=2, column=0, sticky='w', padx=10, pady=5)
+query_name_entry = Entry(frame11, width=62, font=14)
 query_name_entry.bind('<Return>', parsing_entry)
 query_name_entry.grid(row=2, column=1, columnspan=4, sticky='w')
 
-parsing_btn = Button(frame1, text="Parsing", command=parsing, font=16)
+parsing_btn = Button(frame11, text="Parsing", command=parsing, font=16)
 parsing_btn.grid(row=3, column=2, sticky='w')
 
-query_lstbox = Listbox(frame1, height=17, font=10)
-query_lstbox.grid(row=4, column=0, columnspan=5, sticky='we', pady=10)
-parser.set_lstbox(frame1, query_lstbox)
+query_lstbox = Listbox(frame11, height=16, font=10)
+query_lstbox.grid(row=4, column=0, columnspan=5, sticky='we', pady=5)
+# parser.set_lstbox(frame12, query_lstbox)
 data_from_query_table = bd_sqlite.select_from_query_table_all()
 
-header = ' {} {} {} {} '.format('ID'.center(4, ' '),
-                                'Query Name'.center(25, ' '),
+header = ' {} {} {} {} '.format('ID'.center(8, ' '),
+                                'Query Name'.center(40, ' '),
                                 'Url'.center(40, ' '),
                                 'N page'.center(8, ' '))
 query_lstbox.insert(0, header)
 for line, row in enumerate(data_from_query_table, 1):
-    id_q = str(row[0]).center(4, ' ')
-    name_q = utility.format_string(row[1], 25)
+    id_q = str(row[0]).center(8, ' ')
+    name_q = utility.format_string(row[1], 40)
     url_q = utility.format_string(row[2], 40)
     page_q = str(row[3]).center(8, ' ')
     output = ' {} {} {} {} '.format(id_q, name_q, url_q, page_q)
     query_lstbox.insert(line, output)
 
-parser.set_pb(frame5, pb)
+frame12.pack()
+del_lbl = Label(frame12, text='Enter ID', font=16)
+del_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
+del_entry = Entry(frame12, width=10, font=14)
+del_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
+del_btn = Button(frame12, text="Delete Query", command=del_query, font=16)
+del_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
+
+# parser.set_pb(frame5, pb)
 
 # Frame 2
 frame21.pack()
@@ -161,7 +182,7 @@ new_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 new_btn = Button(frame31, text="New Ads", command=new_ads, font=16)
 new_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame32.pack()
-new_ad.set_pb(frame5, pb)
+# new_ad.set_pb(frame5, pb)
 
 # Frame 4
 frame41.pack()
@@ -174,7 +195,7 @@ changes_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 changes_btn = Button(frame41, text="Price Changes", command=price_changes, font=16)
 changes_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame42.pack()
-change.set_pb(frame5, pb)
+# change.set_pb(frame5, pb)
 
 
 root.mainloop()

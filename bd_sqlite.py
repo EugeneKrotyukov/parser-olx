@@ -1,5 +1,6 @@
 """
 http://zametkinapolyah.ru/karta-sajta
+http://www.sqlitetutorial.net/sqlite-delete/
 """
 import sqlite3
 
@@ -66,7 +67,7 @@ def create_parsing_table(table_name, bd_name='olx.sqlite3'):
         cursor = conn.cursor()
         drop = 'DROP TABLE IF EXISTS {}'.format(table_name)
         cursor.execute(drop)
-        create = 'CREATE TABLE {} (number PRIMARY KEY, title, price, date, time, phone, place, content)'.format(table_name)
+        create = 'CREATE TABLE IF NOT EXISTS {} (number PRIMARY KEY, title, price, date, time, phone, place, content)'.format(table_name)
         cursor.execute(create)
 
 
@@ -103,3 +104,21 @@ def select_from_parsing_table_value(column, table_name, row, bd_name='olx.sqlite
         cursor = conn.cursor()
         cursor.execute(query)
     return cursor.fetchone()
+
+
+def drop_parsing_table(table_name, bd_name='olx.sqlite3'):
+    """drop parsing_table"""
+    conn = sqlite3.connect(bd_name)
+    with conn:
+        cursor = conn.cursor()
+        drop = 'DROP TABLE IF EXISTS {}'.format(table_name)
+        cursor.execute(drop)
+
+
+def del_from_query_table_row(row, bd_name='olx.sqlite3'):
+    """delete row from query_table"""
+    conn = sqlite3.connect(bd_name)
+    with conn:
+        cursor = conn.cursor()
+        delete = "DELETE FROM query_table WHERE id='{}'".format(row)
+        cursor.execute(delete)
