@@ -21,8 +21,7 @@ def set_lstbox(frame, widget):
 def get_new_ad(window, id_table):
     """new ads"""
     table_name = 'table{}'.format(id_table)
-    query_table_from_bd = bd_sqlite.select_from_query_table_value(id_table)
-    query_table = [item for sublist in query_table_from_bd for item in sublist]
+    query_table = bd_sqlite.select_from_query_table_value(id_table)
     url = query_table[2]
     number_page = query_table[3]
     ad_numbers_from_bd = bd_sqlite.select_from_parsing_table_column('number', table_name)
@@ -31,7 +30,7 @@ def get_new_ad(window, id_table):
     reference_list = []
     count_page = 1  # start page
     line = 0  # position number to insert into in listbox
-    lstbox.delete(0, 23)
+    # lstbox.delete(0, 26)
 
     # scrape reference from all pages
     while int(number_page) >= count_page:
@@ -42,8 +41,8 @@ def get_new_ad(window, id_table):
         count_page += 1
 
     header = ' {} {} {} '.format('Ad Number'.center(13),
-                                    'Title'.center(77),
-                                    'Price, UAH'.center(14))
+                                    'Title'.center(45),
+                                    'Price, UAH'.center(13))
     lstbox.insert(line, header)
 
     pb['maximum'] = len(reference_list)
@@ -57,8 +56,8 @@ def get_new_ad(window, id_table):
         new_price = int(scraper.get_digits(new_price))
         if new_number not in ad_numbers:
             number = str(new_number).center(13, ' ')
-            title = utility.format_string(new_title, 54)
-            price = str(new_price).center(14, ' ')
+            title = utility.format_string(new_title, 45)
+            price = str(new_price).center(13, ' ')
             line += 1
             output = ' {} {} {} '.format(number, title, price)
             lstbox.insert(line, output)

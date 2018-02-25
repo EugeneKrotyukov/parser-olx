@@ -21,17 +21,15 @@ def set_lstbox(frame, widget):
 def get_change(window, id_table):
     """ads with a changed price"""
     table_name = 'table{}'.format(id_table)
-    query_table_from_bd = bd_sqlite.select_from_query_table_value(id_table)
-    query_table = [item for sublist in query_table_from_bd for item in sublist]
+    query_table = bd_sqlite.select_from_query_table_value(id_table)
     url = query_table[2]
     number_page = query_table[3]
-    ad_numbers_from_bd = bd_sqlite.select_from_parsing_table_column('number', table_name)
-    ad_numbers = [item for sublist in ad_numbers_from_bd for item in sublist]
+    ad_numbers = bd_sqlite.select_from_parsing_table_column('number', table_name)
 
     reference_list = []
     count_page = 1  # start page
     line = 0  # position number to insert into in listbox
-    lstbox.delete(0, 23)
+    lstbox.delete(0, 26)
 
     # scrape reference from all pages
     while int(number_page) >= count_page:
@@ -42,9 +40,9 @@ def get_change(window, id_table):
         count_page += 1
 
     header = ' {} {} {} {} '.format('Ad Number'.center(13),
-                                    'Title'.center(77),
-                                    'Old Price, UAH'.center(16),
-                                    'New Price, UAH'.center(16))
+                                    'Title'.center(45),
+                                    'Old Price, UAH'.center(18),
+                                    'New Price, UAH'.center(18))
     lstbox.insert(line, header)
 
     pb['maximum'] = len(reference_list)
@@ -57,13 +55,12 @@ def get_change(window, id_table):
         new_number, new_title, new_price, new_date, new_time, new_place, new_content = scraper.get_details(html)
         new_price = int(scraper.get_digits(new_price))
         if new_number in ad_numbers:
-            price_from_bd = bd_sqlite.select_from_parsing_table_value('price', table_name, new_number)
-            old_price = price_from_bd[0]
+            old_price = bd_sqlite.select_from_parsing_table_value('price', table_name, new_number)
             if new_price != old_price:
                 number = str(new_number).center(13, ' ')
-                title = utility.format_string(new_title, 54)
-                old_price = str(old_price).center(21, ' ')
-                new_price = str(new_price).center(23, ' ')
+                title = utility.format_string(new_title, 45)
+                old_price = str(old_price).center(18, ' ')
+                new_price = str(new_price).center(18, ' ')
                 line += 1
                 output = ' {} {} {} {} '.format(number, title, old_price, new_price)
                 lstbox.insert(line, output)

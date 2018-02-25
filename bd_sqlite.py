@@ -46,7 +46,17 @@ def select_last_insert(bd_name='olx.sqlite3'):
     with conn:
         cursor = conn.cursor()
         cursor.execute('''SELECT id FROM query_table ORDER BY id DESC LIMIT 1''')
-    return cursor.fetchone()
+    return cursor.fetchone()[0]
+
+
+def select_number_rows(table_name, bd_name='olx.sqlite3'):
+    """select number of rows in table"""
+    query = "SELECT COUNT(*) FROM '{table_name}'".format(table_name=table_name)
+    conn = sqlite3.connect(bd_name)
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+    return cursor.fetchone()[0]
 
 
 def select_from_query_table_value(row, bd_name='olx.sqlite3'):
@@ -56,8 +66,7 @@ def select_from_query_table_value(row, bd_name='olx.sqlite3'):
     with conn:
         cursor = conn.cursor()
         cursor.execute(query)
-    return cursor.fetchall()
-
+    return [item for sublist in cursor.fetchall() for item in sublist]
 
 
 def create_parsing_table(table_name, bd_name='olx.sqlite3'):
@@ -93,7 +102,8 @@ def select_from_parsing_table_column(column, table_name, bd_name='olx.sqlite3'):
     with conn:
         cursor = conn.cursor()
         cursor.execute(query)
-    return cursor.fetchall()
+    return [item for sublist in cursor.fetchall() for item in sublist]
+
 
 
 def select_from_parsing_table_value(column, table_name, row, bd_name='olx.sqlite3'):
@@ -103,7 +113,7 @@ def select_from_parsing_table_value(column, table_name, row, bd_name='olx.sqlite
     with conn:
         cursor = conn.cursor()
         cursor.execute(query)
-    return cursor.fetchone()
+    return cursor.fetchone()[0]
 
 
 def drop_parsing_table(table_name, bd_name='olx.sqlite3'):

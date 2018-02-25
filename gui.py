@@ -1,10 +1,13 @@
 """
 https://ru.wikibooks.org/wiki/GUI_Help/Tkinter_book
 https://metanit.com/python/tutorial/9.1.php
+http://effbot.org/tkinterbook/
 https://ru.wikiversity.org/wiki/%D0%9A%D1%83%D1%80%D1%81_%D0%BF%D0%BE_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA%D0%B5_Tkinter_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B0_Python
 """
 from tkinter import *
 import tkinter.ttk as ttk
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import bd_sqlite
 import parser
 import plot
@@ -40,6 +43,10 @@ def del_query():
 def statistics():
     """displays bar in Frame2"""
     id_query = query_entry.get()
+    plt.clf()
+    plt.gcf().clear()
+    fig.clf()
+    plot.set_fig(frame22, fig)
     plot.plotting(frame22, id_query)
 
 
@@ -47,8 +54,7 @@ def new_ads():
     """displays new ads in Frame3 """
     new_btn['state'] = 'disabled'
     id_query = new_entry.get()
-    new_lstbox = Listbox(frame32, width=750, height=23, font=10)
-    new_lstbox.pack()
+    new_lstbox.delete(0, END)
     new_ad.set_lstbox(frame32, new_lstbox)
     new_ad.set_pb(frame5, pb)
     new_ad.get_new_ad(frame32, id_query)
@@ -58,9 +64,8 @@ def new_ads():
 def price_changes():
     """displays ads at a price changes in Frame4 """
     changes_btn['state'] = 'disabled'
-    id_query = query_entry.get()
-    changes_lstbox = Listbox(frame42, width=750,	height=23,	font=10)
-    changes_lstbox.pack()
+    id_query = changes_entry.get()
+    changes_lstbox.delete(0, END)
     change.set_lstbox(frame42, changes_lstbox)
     change.set_pb(frame5, pb)
     change.get_change(frame42, id_query)
@@ -131,22 +136,24 @@ query_name_entry.grid(row=2, column=1, columnspan=4, sticky='w')
 parsing_btn = Button(frame11, text="Parsing", command=parsing, font=16)
 parsing_btn.grid(row=3, column=2, sticky='w')
 
-query_lstbox = Listbox(frame11, height=16, font=10)
+query_lstbox = Listbox(frame11, height=18, font='monospace 10')
 query_lstbox.grid(row=4, column=0, columnspan=5, sticky='we', pady=5)
-# parser.set_lstbox(frame12, query_lstbox)
 data_from_query_table = bd_sqlite.select_from_query_table_all()
 
-header = ' {} {} {} {} '.format('ID'.center(8, ' '),
-                                'Query Name'.center(40, ' '),
-                                'Url'.center(40, ' '),
-                                'N page'.center(8, ' '))
+header = ' {} {} {} {} '.format('ID'.center(4, ' '),
+                                'Query Name'.center(30, ' '),
+                                'Url'.center(50, ' '),
+                                'N Ads'.center(8, ' '))
 query_lstbox.insert(0, header)
 for line, row in enumerate(data_from_query_table, 1):
-    id_q = str(row[0]).center(8, ' ')
-    name_q = utility.format_string(row[1], 40)
-    url_q = utility.format_string(row[2], 40)
-    page_q = str(row[3]).center(8, ' ')
-    output = ' {} {} {} {} '.format(id_q, name_q, url_q, page_q)
+    id_q = str(row[0]).center(4, ' ')
+    table_name = 'table{}'.format(row[0])
+    n_ads = bd_sqlite.select_number_rows(table_name)
+    n_ads = str(n_ads).center(8, ' ')
+    name_q = utility.format_string(row[1], 30)
+    url_q = utility.format_string(row[2], 50)
+    # page_q = str(row[3]).center(8, ' ')
+    output = ' {} {} {} {} '.format(id_q, name_q, url_q, n_ads)
     query_lstbox.insert(line, output)
 
 frame12.pack()
@@ -156,8 +163,6 @@ del_entry = Entry(frame12, width=10, font=14)
 del_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 del_btn = Button(frame12, text="Delete Query", command=del_query, font=16)
 del_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
-
-# parser.set_pb(frame5, pb)
 
 # Frame 2
 frame21.pack()
@@ -170,6 +175,8 @@ query_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 query_btn = Button(frame21, text="Plotting", command=statistics, font=16)
 query_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame22.pack()
+fig = plt.figure()
+
 
 # Frame 3
 frame31.pack()
@@ -182,7 +189,8 @@ new_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 new_btn = Button(frame31, text="New Ads", command=new_ads, font=16)
 new_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame32.pack()
-# new_ad.set_pb(frame5, pb)
+new_lstbox = Listbox(frame32, width=750, height=26, font='monospace 10')
+new_lstbox.pack()
 
 # Frame 4
 frame41.pack()
@@ -195,7 +203,8 @@ changes_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 changes_btn = Button(frame41, text="Price Changes", command=price_changes, font=16)
 changes_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame42.pack()
-# change.set_pb(frame5, pb)
+changes_lstbox = Listbox(frame42, width=750,	height=26,	font='monospace 10')
+changes_lstbox.pack()
 
 
 root.mainloop()

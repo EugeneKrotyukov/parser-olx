@@ -22,8 +22,8 @@ def set_lstbox(frame, widget):
 def parsing(url, number_page, query_name):
     bd_sqlite.create_query_table()
     bd_sqlite.insert_into_query_table(query_name, url, number_page)
-    table_name = bd_sqlite.select_last_insert()
-    table_name = 'table' + str(table_name[0])
+    id_q = bd_sqlite.select_last_insert()
+    table_name = 'table' + str(id_q)
 
     reference_list = []
     count_page = 1  # start page
@@ -53,19 +53,22 @@ def parsing(url, number_page, query_name):
 
         bd_sqlite.insert_into_parsing_table(table_name, number, title, price, date, time, phone, place, content)
 
-        lstbox.delete(0, 16)
+        lstbox.delete(0, 18)
         header = ' {} {} {} {} '.format('ID'.center(4, ' '),
                                         'Query Name'.center(25, ' '),
                                         'Url'.center(40, ' '),
-                                        'N page'.center(8, ' '))
+                                        'N Ads'.center(8, ' '))
         lstbox.insert(0, header)
         data_from_query_table = bd_sqlite.select_from_query_table_all()
         for line, row in enumerate(data_from_query_table, 1):
             id_q = str(row[0]).center(4, ' ')
+            table_name = 'table{}'.format(row[0])
+            n_ads = bd_sqlite.select_number_rows(table_name)
+            n_ads = str(n_ads).center(8, ' ')
             name_q = utility.format_string(row[1], 25)
             url_q = utility.format_string(row[2], 40)
-            page_q = str(row[3]).center(8, ' ')
-            output = ' {} {} {} {} '.format(id_q, name_q, url_q, page_q)
+            # page_q = str(row[3]).center(8, ' ')
+            output = ' {} {} {} {} '.format(id_q, name_q, url_q, n_ads)
             lstbox.insert(line, output)
 
 
