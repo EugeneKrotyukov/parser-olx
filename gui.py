@@ -35,6 +35,7 @@ def parsing_entry(event):
 
 def del_query():
     """delete row from Query_table and TableID"""
+    query_lstbox.delete(0, END)
     utility.set_lstbox(frame11, query_lstbox)
     id_query = del_entry.get()
     utility.del_query(id_query)
@@ -43,7 +44,6 @@ def del_query():
 def statistics():
     """displays bar in Frame2"""
     id_query = query_entry.get()
-    # plot.set_fig(frame22, fig)
     plot.plotting(frame22, id_query)
 
 
@@ -132,7 +132,7 @@ nb.add(frame3, text='New ads')
 nb.add(frame4, text='Price Changes')
 nb.add(frame5, text='Export to Excel')
 
-# Frame 1
+# Frame 11 - parsing
 frame11.pack()
 url_lbl = Label(frame11, text='URL', font=16)
 url_lbl.grid(row=0, column=0, sticky='w', padx=10, pady=5)
@@ -157,26 +157,13 @@ query_name_entry.grid(row=2, column=1, columnspan=4, sticky='w')
 parsing_btn = Button(frame11, text="Parsing", command=parsing, font=16)
 parsing_btn.grid(row=3, column=2, sticky='w')
 
+# display table of query
 query_lstbox = Listbox(frame11, height=18, font='monospace 10')
 query_lstbox.grid(row=4, column=0, columnspan=5, sticky='we', pady=5)
-data_from_query_table = bd_sqlite.select_from_query_table_all()
+utility.set_lstbox(frame11, query_lstbox)
+utility.display_query_table()
 
-header = ' {} {} {} {} '.format('ID'.center(4, ' '),
-                                'Query Name'.center(30, ' '),
-                                'Url'.center(50, ' '),
-                                'N Ads'.center(8, ' '))
-query_lstbox.insert(0, header)
-for line, row in enumerate(data_from_query_table, 1):
-    id_q = str(row[0]).center(4, ' ')
-    table_name = 'table{}'.format(row[0])
-    n_ads = bd_sqlite.select_number_rows(table_name)
-    n_ads = str(n_ads).center(8, ' ')
-    name_q = utility.format_string(row[1], 30)
-    url_q = utility.format_string(row[2], 50)
-    # page_q = str(row[3]).center(8, ' ')
-    output = ' {} {} {} {} '.format(id_q, name_q, url_q, n_ads)
-    query_lstbox.insert(line, output)
-
+# Frame12 - delete table of query
 frame12.pack()
 del_lbl = Label(frame12, text='Enter ID', font=16)
 del_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
@@ -185,7 +172,7 @@ del_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 del_btn = Button(frame12, text="Delete Query", command=del_query, font=16)
 del_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 
-# Frame 2
+# Frame 2 - plotting number of ads from the price
 frame21.pack()
 query_lbl = Label(frame21, text='Enter ID', font=16)
 query_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
@@ -197,7 +184,7 @@ query_btn = Button(frame21, text="Plotting", command=statistics, font=16)
 query_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame22.pack()
 
-# Frame 3
+# Frame 3 - new ads
 frame31.pack()
 new_lbl = Label(frame31, text='Enter ID', font=16)
 new_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
@@ -211,7 +198,7 @@ frame32.pack()
 new_lstbox = Listbox(frame32, width=750, height=26, font='monospace 10')
 new_lstbox.pack()
 
-# Frame 4
+# Frame 4 - modified price ads
 frame41.pack()
 changes_lbl = Label(frame41, text='Enter ID', font=16)
 changes_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
@@ -225,7 +212,7 @@ frame42.pack()
 changes_lstbox = Listbox(frame42, width=750,	height=26,	font='monospace 10')
 changes_lstbox.pack()
 
-# Frame 5
+# Frame 51 - database preview
 frame51.pack()
 export_lbl = Label(frame51, text='Enter ID', font=16)
 export_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
@@ -236,10 +223,12 @@ export_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 export_btn = Button(frame51, text="Preview", command=preview, font=16)
 export_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 
+# Frame52 - display database preview
 frame52.pack()
 export_lstbox = Listbox(frame52, width=750,	height=23,	font='monospace 10')
 export_lstbox.pack()
 
+# Frame53 - export to excel
 frame53.pack()
 exl_lbl = Label(frame53, text='Enter File Name', font=16)
 exl_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)

@@ -8,13 +8,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg  # Рисует 
 import bd_sqlite
 
 
-# def set_fig(frame, widget):
-#    """set frame and figure for GUI"""
-#    global window, fig
-#    window = frame
-#    fig = widget
-
-
 def calculate_statistics(list_prices):
     """dict: key - price, value - number of ads with this price"""
     price_count = {}

@@ -30,7 +30,6 @@ def get_new_ad(window, id_table):
     reference_list = []
     count_page = 1  # start page
     line = 0  # position number to insert into in listbox
-    # lstbox.delete(0, 26)
 
     # scrape reference from all pages
     while int(number_page) >= count_page:
