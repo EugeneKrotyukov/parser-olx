@@ -95,6 +95,16 @@ def insert_into_parsing_table(table_name, number, title, price, date, time, phon
         print('Ad Number: ', number)
 
 
+def select_from_parsing_table_all(table_name, bd_name='olx.sqlite3'):
+    """select all from table"""
+    query = 'SELECT * FROM {table_name}'.format(table_name=table_name)
+    conn = sqlite3.connect(bd_name)
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+    return cursor.execute(query)
+
+
 def select_from_parsing_table_column(column, table_name, bd_name='olx.sqlite3'):
     """select column from table"""
     query = 'SELECT {column} FROM {table_name}'.format(column=column, table_name=table_name)

@@ -8,11 +8,11 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg  # Рисует 
 import bd_sqlite
 
 
-def set_fig(frame, widget):
-    """set frame and figure for GUI"""
-    global window, fig
-    window = frame
-    fig = widget
+# def set_fig(frame, widget):
+#    """set frame and figure for GUI"""
+#    global window, fig
+#    window = frame
+#    fig = widget
 
 
 def calculate_statistics(list_prices):
@@ -36,7 +36,12 @@ def plotting(window, id_table):
     width_bar = len(x) * 2
 
     # bar
-    # fig = plt.figure()
+    fig = plt.figure()
+
+    plt.clf()
+    plt.gcf().clear()
+    fig.clf()
+
     ax = fig.add_subplot(111)
     ax.bar(x, y, width=width_bar)
     # ax.set_title('Распределение цены')

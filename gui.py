@@ -6,13 +6,12 @@ https://ru.wikiversity.org/wiki/%D0%9A%D1%83%D1%80%D1%81_%D0%BF%D0%BE_%D0%B1%D0%
 """
 from tkinter import *
 import tkinter.ttk as ttk
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
 import bd_sqlite
 import parser
 import plot
-import change
 import new_ad
+import change
+import export_exls
 import utility
 
 
@@ -35,6 +34,7 @@ def parsing_entry(event):
 
 
 def del_query():
+    """delete row from Query_table and TableID"""
     utility.set_lstbox(frame11, query_lstbox)
     id_query = del_entry.get()
     utility.del_query(id_query)
@@ -43,10 +43,7 @@ def del_query():
 def statistics():
     """displays bar in Frame2"""
     id_query = query_entry.get()
-    plt.clf()
-    plt.gcf().clear()
-    fig.clf()
-    plot.set_fig(frame22, fig)
+    # plot.set_fig(frame22, fig)
     plot.plotting(frame22, id_query)
 
 
@@ -70,6 +67,24 @@ def price_changes():
     change.set_pb(frame5, pb)
     change.get_change(frame42, id_query)
     changes_btn['state'] = 'normal'
+
+
+def preview():
+    """display content TableID in Frame5"""
+    export_btn['state'] = 'disabled'
+    id_query = export_entry.get()
+    export_lstbox.delete(0, END)
+    export_exls.set_lstbox(frame52, export_lstbox)
+    export_exls.preview_tableID(id_query)
+    export_btn['state'] = 'normal'
+
+
+def export_excel():
+    exl_btn['state'] = 'disabled'
+    id_query = export_entry.get()
+    file_name = exl_entry.get()
+    export_exls.export_exl(id_query, file_name)
+    exl_btn['state'] = 'normal'
 
 
 def _quit():
@@ -99,17 +114,23 @@ frame4 = Frame(root)
 frame41 = Frame(frame4)
 frame42 = Frame(frame4)
 frame5 = Frame(root)
-frame5.pack()
+frame51 = Frame(frame5)
+frame52 = Frame(frame5)
+frame53 = Frame(frame5)
+frame9 = Frame(root)
+frame9.pack()
 
-pb = ttk.Progressbar(frame5, orient=HORIZONTAL, length=792, mode='determinate')
-pb.pack(pady=5)
-quit_btn = Button(frame5, text='Quit', command=_quit, font=16)
-quit_btn.pack(side=BOTTOM)
+
+pb = ttk.Progressbar(frame9, orient=HORIZONTAL, length=792, mode='determinate')
+pb.pack()
+quit_btn = Button(frame9, text='Quit', command=_quit, font=16)
+quit_btn.pack(side=BOTTOM, pady=5)
 
 nb.add(frame1, text='Parser')
 nb.add(frame2, text='Statistics')
 nb.add(frame3, text='New ads')
 nb.add(frame4, text='Price Changes')
+nb.add(frame5, text='Export to Excel')
 
 # Frame 1
 frame11.pack()
@@ -175,8 +196,6 @@ query_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
 query_btn = Button(frame21, text="Plotting", command=statistics, font=16)
 query_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame22.pack()
-fig = plt.figure()
-
 
 # Frame 3
 frame31.pack()
@@ -205,6 +224,29 @@ changes_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 frame42.pack()
 changes_lstbox = Listbox(frame42, width=750,	height=26,	font='monospace 10')
 changes_lstbox.pack()
+
+# Frame 5
+frame51.pack()
+export_lbl = Label(frame51, text='Enter ID', font=16)
+export_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
+export_entry = Entry(frame51, width=10, font=14)
+export_entry.focus()
+export_entry.insert(0, 1)
+export_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
+export_btn = Button(frame51, text="Preview", command=preview, font=16)
+export_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
+
+frame52.pack()
+export_lstbox = Listbox(frame52, width=750,	height=23,	font='monospace 10')
+export_lstbox.pack()
+
+frame53.pack()
+exl_lbl = Label(frame53, text='Enter File Name', font=16)
+exl_lbl.grid(row=0, column=0, sticky='we', padx=5, pady=5)
+exl_entry = Entry(frame53, width=10, font=14)
+exl_entry.grid(row=0, column=1, sticky='we', padx=5, pady=5)
+exl_btn = Button(frame53, text="Export to Excel", command=export_excel, font=16)
+exl_btn.grid(row=0, column=2, sticky='we', padx=5, pady=5)
 
 
 root.mainloop()

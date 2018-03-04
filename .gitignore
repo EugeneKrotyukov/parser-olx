@@ -1,3 +1,4 @@
 __pycache__
 olx.sqlite3
-test
+*.xls
+*.xlsx
