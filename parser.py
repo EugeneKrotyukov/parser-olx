@@ -1,5 +1,6 @@
 import urllib.request
 import re
+import tkinter.messagebox as mbox
 import scraper
 import bd_sqlite
 import utility
@@ -77,12 +78,14 @@ def check(url, number_page, query_name):
     if url.startswith('https://www.olx.ua/'):
         pass
     else:
+        mbox.showinfo('MESSAGE', 'Incorrect URL')
         return False
     if len(query_name) > 0:
         pass
     else:
+        mbox.showinfo('MESSAGE', 'Incorrect Query Name')
         return False
-    if number_page.isdigit():
+    if number_page.isdigit() and int(number_page) > 0:
         # get the last page
         response = scraper.get_response(url)
         html = str(response.read().decode("utf-8"))
@@ -92,4 +95,5 @@ def check(url, number_page, query_name):
             number_page = max_page
         parsing(url, number_page, query_name)
     else:
+        mbox.showinfo('MESSAGE', 'Incorrect Number of Page')
         return False

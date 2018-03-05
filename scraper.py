@@ -10,39 +10,11 @@ parsing - crawling + scraping
 """
 
 
-# def check_url(url):
-#    if url.startswith('https://www.olx.ua/'):
-#        return True
-#    else:
-#        return False
-
-
 def get_response(url):
     """get html"""
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/53.0.2785.143 Chrome/53.0.2785.143 Safari/537.36'
     r = urllib.request.Request(url, headers={'user-agent': user_agent})
     return urllib.request.urlopen(r)
-
-
-# def get_max_page(html):
-#    """get the last page"""
-#    max_page = re.search(r'(?<="page_count":").*?(?=")', html)
-#    return str(max_page.group(0))
-
-
-# def check_number_page(url, number_page):
-#    if number_page.isdigit():
-#        # get the last page
-#        response = get_response(url)
-#        html = str(response.read().decode("utf-8"))
-#        max_page = re.search(r'(?<="page_count":").*?(?=")', html)
-#        max_page = str(max_page.group(0))
-
-#        if number_page > max_page:
-#            number_page = max_page
-#        return number_page
-#    else:
-#        return False
 
 
 def get_links_to_ads(html):
@@ -79,7 +51,10 @@ def get_phone(id_product, token, cookie):
             phone = re.search(r'(?<=">)[\w\W]*?(?=<)', str_phone_response)
         else:
             phone = re.search(r'(?<=":")[\w\W]*?(?=")', str_phone_response)
-        phone = str(phone.group(0))
+        try:
+            phone = str(phone.group(0))
+        except AttributeError:
+            phone = 'Not found'
     except urllib.error.URLError as e:
         phone = e.reason
     return phone
@@ -110,9 +85,12 @@ def get_details(html):
 
 def get_digits(string):
     """clear the value read from the database"""
-    digit = re.search(r'[0-9| ]+', string)  # finds all the digits
-    digit = str(digit.group(0))
-    digit = re.sub(r'\s', '', digit)  # removes all spaces
+    try:
+        digit = re.search(r'[0-9| ]+', string)  # finds all the digits
+        digit = str(digit.group(0))
+        digit = re.sub(r'\s', '', digit)  # removes all spaces
+    except TypeError:
+        digit = 0
     return digit
 
 

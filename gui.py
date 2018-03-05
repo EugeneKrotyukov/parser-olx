@@ -17,7 +17,6 @@ import utility
 
 def parsing():
     """button PARSING click"""
-    global pb
     parsing_btn['state'] = 'disabled'
     url = url_entry.get()
     number_page = number_page_entry.get()
@@ -80,6 +79,7 @@ def preview():
 
 
 def export_excel():
+    """export TableID to *.xlsx"""
     exl_btn['state'] = 'disabled'
     id_query = export_entry.get()
     file_name = exl_entry.get()
@@ -118,9 +118,8 @@ frame51 = Frame(frame5)
 frame52 = Frame(frame5)
 frame53 = Frame(frame5)
 frame9 = Frame(root)
+
 frame9.pack()
-
-
 pb = ttk.Progressbar(frame9, orient=HORIZONTAL, length=792, mode='determinate')
 pb.pack()
 quit_btn = Button(frame9, text='Quit', command=_quit, font=16)
