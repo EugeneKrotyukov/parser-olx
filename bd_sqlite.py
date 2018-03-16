@@ -26,9 +26,10 @@ def insert_into_query_table(query_name, url, number_page, bd_name='olx.sqlite3')
             cursor.execute('''INSERT INTO query_table (query_name, url, number_page)
             VALUES (?, ?, ?)''', (query_name, url, number_page))
     except sqlite3.Error as err:
-        print('Error: ', err)
-        print('Table Name: ', table_name)
-        print('URL: ', url)
+        # print('Error: ', err)
+        # print('Table Name: ', table_name)
+        # print('URL: ', url)
+        pass
 
 
 def select_from_query_table_all(bd_name='olx.sqlite3'):
@@ -36,8 +37,12 @@ def select_from_query_table_all(bd_name='olx.sqlite3'):
     conn = sqlite3.connect(bd_name)
     with conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM query_table')
-    return cursor.fetchall()
+        try:
+            cursor.execute('SELECT * FROM query_table')
+            content = cursor.fetchall()
+        except sqlite3.OperationalError:
+            content = None
+    return content
 
 
 def select_last_insert(bd_name='olx.sqlite3'):

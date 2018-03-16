@@ -24,15 +24,16 @@ def display_query_table():
                                     'N Ads'.center(8, ' '))
     lstbox.insert(0, header)
     content = bd_sqlite.select_from_query_table_all()
-    for line, row in enumerate(content, 1):
-        id_q = str(row[0]).center(4, ' ')
-        table_name = 'table{}'.format(row[0])
-        n_ads = bd_sqlite.select_number_rows(table_name)
-        n_ads = str(n_ads).center(8, ' ')
-        name_q = format_string(row[1], 30)
-        url_q = format_string(row[2], 50)
-        output = ' {} {} {} {} '.format(id_q, name_q, url_q, n_ads)
-        lstbox.insert(line, output)
+    if content is not None:
+        for line, row in enumerate(content, 1):
+            id_q = str(row[0]).center(4, ' ')
+            table_name = 'table{}'.format(row[0])
+            n_ads = bd_sqlite.select_number_rows(table_name)
+            n_ads = str(n_ads).center(8, ' ')
+            name_q = format_string(row[1], 30)
+            url_q = format_string(row[2], 50)
+            output = ' {} {} {} {} '.format(id_q, name_q, url_q, n_ads)
+            lstbox.insert(line, output)
 
 
 def del_query(id_table):
